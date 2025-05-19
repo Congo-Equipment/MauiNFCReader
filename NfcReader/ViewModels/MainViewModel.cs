@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using NfcReader.Models;
 using NfcReader.Services.Interfaces;
 using Plugin.NFC;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace NfcReader.ViewModels
@@ -14,7 +15,7 @@ namespace NfcReader.ViewModels
 
 
         [ObservableProperty]
-        private IReadOnlyCollection<Recording>? _recordings;
+        private ObservableCollection<Recording>? _recordings;
 
         [ObservableProperty]
         private string? _nfcBadgeTagInfo;
