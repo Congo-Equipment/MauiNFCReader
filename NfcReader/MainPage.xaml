@@ -25,15 +25,15 @@
             </CollectionView>
             <mdc:FAB x:Name="fabMainBtn" IconData="{Static icon:Material.Add}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20" Clicked="fabMainBtn_Clicked" />
 
-            <bottomSheet:SfBottomSheet x:Name="recordingSheet" FullExpandedRatio="0.50" HalfExpandedRatio="0.50" EnableSwiping="True">
+            <bottomSheet:SfBottomSheet x:Name="recordingSheet" FullExpandedRatio="0.50" HalfExpandedRatio="0.75" EnableSwiping="True">
                 <bottomSheet:SfBottomSheet.BottomSheetContent>
                     <ScrollView>
                         <VerticalStackLayout Spacing="15">
-                            <Entry Placeholder="Enter the staffId(Matricule)" Margin="20,0,20,0"/>
-                            
+                            <Entry Placeholder="Enter the staffId(Matricule)" Margin="20,0,20,0" Text="{Binding InputStaffId,Mode=TwoWay}"/>
+
                             <Entry Placeholder="Enter the staffId(Matricule)" Margin="20,0,20,0" Text="{Binding NfcBadgeTagInfo}" IsReadOnly="True"/>
 
-                            <mdc:Button Style="{DynamicResource FilledButtonStyle}" Text="Filled" IsVisible="{Binding ShowSaveButton}" />
+                            <mdc:Button Style="{DynamicResource FilledButtonStyle}" Text="Filled" IsVisible="{Binding ShowSaveButton}" Command="{Binding SaveAndSyncCommand}" WidthRequest="180" />
                         </VerticalStackLayout>
                     </ScrollView>
                 </bottomSheet:SfBottomSheet.BottomSheetContent>

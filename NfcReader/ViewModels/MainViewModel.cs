@@ -1,5 +1,6 @@
 ﻿using AsyncAwaitBestPractices;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using NfcReader.Models;
 using NfcReader.Services.Interfaces;
 using Plugin.NFC;
@@ -20,6 +21,9 @@ namespace NfcReader.ViewModels
 
         [ObservableProperty]
         private bool _showSaveButton = false;
+
+        [ObservableProperty]
+        private string _inputStaffId;
 
         public MainViewModel(IRegistrationService registrationService)
         {
@@ -84,6 +88,12 @@ namespace NfcReader.ViewModels
                 return;
             }
 
+            if (string.IsNullOrWhiteSpace(InputStaffId))
+            {
+                AppShell.Current.DisplayAlert("NFC", "Please fill first the staffId(Matricule)", "OK");
+                return;
+            }
+
             // Customized serial number
             var identifier = tagInfo.Identifier;
             var serialNumber = NFCUtils.ByteArrayToHexString(identifier, string.Empty);
@@ -92,7 +102,7 @@ namespace NfcReader.ViewModels
             if (!tagInfo.IsSupported)
             {
                 NfcBadgeTagInfo = serialNumber;
-                ShowSaveButton = !string.IsNullOrWhiteSpace(NfcBadgeTagInfo);
+                ShowSaveButton = !string.IsNullOrWhiteSpace(NfcBadgeTagInfo) && !string.IsNullOrWhiteSpace(InputStaffId);
                 //AppShell.Current.DisplayAlert("NFC", title, "OK");
             }
             else if (tagInfo.IsEmpty)
@@ -104,6 +114,28 @@ namespace NfcReader.ViewModels
                 var first = tagInfo.Records[0];
                 AppShell.Current.DisplayAlert("NFC", first.ToString(), "OK");
             }
+        }
+
+
+        [RelayCommand]
+        private async Task SaveAndSync()
+        {
+            if (string.IsNullOrWhiteSpace(NfcBadgeTagInfo) || string.IsNullOrWhiteSpace(InputStaffId))
+            {
+                await AppShell.Current.DisplayAlert("NFC", "Please fill first the staffId(Matricule)", "OK");
+                return;
+            }
+            var recording = new Recording
+            {
+                BadgeId = NfcBadgeTagInfo,
+                StaffId = InputStaffId,
+                Created = DateTime.UtcNow
+            };
+            await _registrationService.SaveAndSync(recording);
+            await AppShell.Current.DisplayAlert("NFC", "Saved successfully", "OK");
+            // Reset the fields after saving
+            NfcBadgeTagInfo = string.Empty;
+            InputStaffId = string.Empty;
         }
     }
 }
