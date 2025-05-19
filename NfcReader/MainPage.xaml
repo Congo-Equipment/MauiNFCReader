@@ -18,6 +18,8 @@
                                     <Label Text="{Binding StaffId}" FontSize="16" FontAttributes="Bold" FontAutoScalingEnabled="True" VerticalOptions="Center" Grid.Column="0"/>
                                     <Label Text="{Binding BadgeId}" FontSize="14" VerticalOptions="Center" Grid.Column="1"/>
                                 </VerticalStackLayout>
+
+                                <Label Text="{Binding Created, StringFormat='{0:dd/mm/yyyy HH:mm}'}" FontSize="10" VerticalOptions="End"  HorizontalOptions="End"/>
                             </Grid>
                         </Border>
                     </DataTemplate>
