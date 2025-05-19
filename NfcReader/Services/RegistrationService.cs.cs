@@ -10,15 +10,24 @@ namespace NfcReader.Services
     {
         public async ValueTask<IReadOnlyCollection<Recording>> GetLocalRecordings()
         {
-            using var db = new LiteDatabaseAsync($"Filename={Constants.DB_PATH};Connection=shared;Password=Katanga@8");
-            var collection = db.GetCollection<Recording>(nameof(Recording));
+            try
+            {
+                using var db = new LiteDatabaseAsync($"Filename={Constants.DB_PATH};Connection=shared");
+                var collection = db.GetCollection<Recording>(nameof(Recording));
 
-            // Check if the recording already exists
-            var existingRecordings = await collection
-                .Query()
-                .ToListAsync();
+                // Check if the recording already exists
+                var existingRecordings = await collection
+                    .Query()
+                    .ToListAsync();
 
-            return existingRecordings;
+                return existingRecordings;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error retreiving data: {ex.Message}");
+                Debug.WriteLine(ex.StackTrace);
+                return [];
+            }
         }
 
         public ValueTask<bool> HasBeenRecorded(string badgeId, string staffId)
