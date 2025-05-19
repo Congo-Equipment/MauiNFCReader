@@ -26,6 +26,7 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
             <mdc:FAB x:Name="fabMainBtn" IconData="{Static icon:Material.Add}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20" Clicked="fabMainBtn_Clicked" />
+            <mdc:FAB x:Name="fabRefreshBtn" IconData="{Static icon:Material.Refresh}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20,0,20,80"/>
 
             <bottomSheet:SfBottomSheet x:Name="recordingSheet" FullExpandedRatio="0.50" HalfExpandedRatio="0.75" EnableSwiping="True">
                 <bottomSheet:SfBottomSheet.BottomSheetContent>
