@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace NfcReader.Services
 {
-    internal class RegistrationService : IRegistrationService
+    internal class RegistrationService(IApiService apiService) : IRegistrationService
     {
         public async ValueTask<IReadOnlyCollection<Recording>> GetLocalRecordings()
         {
@@ -60,6 +60,17 @@ namespace NfcReader.Services
                 var result = await collection.InsertAsync(recording);
 
                 //TODO: need to call the backend api.
+                var response = await apiService.SaveRecording(recording);
+                if (response.IsSuccessStatusCode)
+                {
+                    // If the API call was successful, delete the local recording
+                    Debug.Print($"API call failed: {response.ReasonPhrase}");
+                }
+                else
+                {
+                    // If the API call failed, keep the local recording for later sync
+                    Debug.Print($"API call failed: {response.ReasonPhrase}");
+                }
 
                 return true; // Simulate a successful save and sync operation
             }
