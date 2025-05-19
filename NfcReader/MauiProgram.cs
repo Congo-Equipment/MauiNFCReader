@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using NfcReader.ViewModels;
 
 namespace NfcReader
 {
@@ -18,6 +19,9 @@ namespace NfcReader
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+
+            builder.Services.AddScoped<MainPage>();
+            builder.Services.AddTransient<MainViewModel>();
 
             return builder.Build();
         }
