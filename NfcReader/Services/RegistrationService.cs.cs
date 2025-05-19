@@ -1,14 +1,24 @@
-﻿using NfcReader.Models;
+﻿using LiteDB.Async;
+using NfcReader.Models;
 using NfcReader.Services.Interfaces;
+using NfcReader.Utils;
 using System.Diagnostics;
 
 namespace NfcReader.Services
 {
     internal class RegistrationService : IRegistrationService
     {
-        public ValueTask<IReadOnlyCollection<Recording>> GetLocalRecordings()
+        public async ValueTask<IReadOnlyCollection<Recording>> GetLocalRecordings()
         {
-            throw new NotImplementedException();
+            using var db = new LiteDatabaseAsync($"Filename={Constants.DB_PATH};Connection=shared;Password=Katanga@8");
+            var collection = db.GetCollection<Recording>(nameof(Recording));
+
+            // Check if the recording already exists
+            var existingRecordings = await collection
+                .Query()
+                .ToListAsync();
+
+            return existingRecordings;
         }
 
         public ValueTask<bool> HasBeenRecorded(string badgeId, string staffId)
@@ -20,6 +30,28 @@ namespace NfcReader.Services
         {
             try
             {
+                using var db = new LiteDatabaseAsync($"Filename={Constants.DB_PATH};Connection=shared");
+                var collection = db.GetCollection<Recording>(nameof(Recording));
+
+                // Check if the recording already exists
+                var existingRecording = await collection
+                    .Query()
+                    .Where(x => x.BadgeId == recording.BadgeId && x.StaffId == recording.StaffId)
+                    .FirstOrDefaultAsync();
+                if (existingRecording != null) return false;
+
+                //check if the record exist using the badgeId
+                var byBadgeId = await collection
+                    .Query()
+                    .Where(x => x.BadgeId == recording.BadgeId)
+                    .FirstOrDefaultAsync();
+                if (byBadgeId != null) return false;
+
+                // Insert the new recording
+                var result = await collection.InsertAsync(recording);
+
+                //TODO: need to call the backend api.
+
                 return true; // Simulate a successful save and sync operation
             }
             catch (Exception ex)

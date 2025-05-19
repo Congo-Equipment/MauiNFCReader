@@ -62,6 +62,7 @@
 		<PackageReference Include="AsyncAwaitBestPractices" Version="9.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="IconPacks.Material" Version="1.0.8940.2-build" />
+		<PackageReference Include="LiteDB.Async" Version="0.1.8" />
 		<PackageReference Include="Material.Components.Maui" Version="0.2.2-preview" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />

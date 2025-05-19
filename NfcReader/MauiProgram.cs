@@ -30,7 +30,7 @@ namespace NfcReader
             builder.Services.AddTransient<MainViewModel>();
 
             /* service registration */
-            builder.Services.AddSingleton<IRegistrationService, RegistrationService>();
+            builder.Services.AddTransient<IRegistrationService, RegistrationService>();
 
             return builder.Build();
         }
