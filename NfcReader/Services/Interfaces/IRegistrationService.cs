@@ -19,14 +19,14 @@ namespace NfcReader.Services.Interfaces
         /// </summary>
         /// <param name="recording"></param>
         /// <returns></returns>
-        ValueTask SaveAndSync(Recording recording);
+        ValueTask<bool> SaveAndSync(Recording recording);
 
         /// <summary>
         /// Record the clocking and sync it with the server.
         /// </summary>
         /// <param name="clocking"></param>
         /// <returns></returns>
-        ValueTask SaveAndSync(RawClocking clocking);
+        ValueTask<bool> SaveAndSync(RawClocking clocking);
 
         /// <summary>
         /// Return the list of all recorded badgeId(serial Number) and staffId.

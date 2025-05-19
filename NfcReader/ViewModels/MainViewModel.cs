@@ -125,17 +125,27 @@ namespace NfcReader.ViewModels
                 await AppShell.Current.DisplayAlert("NFC", "Please fill first the staffId(Matricule)", "OK");
                 return;
             }
+
             var recording = new Recording
             {
                 BadgeId = NfcBadgeTagInfo,
                 StaffId = InputStaffId,
                 Created = DateTime.UtcNow
             };
-            await _registrationService.SaveAndSync(recording);
-            await AppShell.Current.DisplayAlert("NFC", "Saved successfully", "OK");
-            // Reset the fields after saving
-            NfcBadgeTagInfo = string.Empty;
-            InputStaffId = string.Empty;
+
+            // Check if the cardId has been recorded for the given staffId
+            if (await _registrationService.SaveAndSync(recording))
+            {
+                await AppShell.Current.DisplayAlert("NFC", "Saved successfully", "OK");
+                // Reset the fields after saving
+                NfcBadgeTagInfo = string.Empty;
+                InputStaffId = string.Empty;
+            }
+            else
+            {
+                await AppShell.Current.DisplayAlert("NFC", "Error saving the recording", "OK");
+            }
+
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using NfcReader.Models;
 using NfcReader.Services.Interfaces;
+using System.Diagnostics;
 
 namespace NfcReader.Services
 {
@@ -15,12 +16,21 @@ namespace NfcReader.Services
             throw new NotImplementedException();
         }
 
-        public ValueTask SaveAndSync(Recording recording)
+        public async ValueTask<bool> SaveAndSync(Recording recording)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return true; // Simulate a successful save and sync operation
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error saving and syncing recording: {ex.Message}");
+                Debug.WriteLine(ex.StackTrace);
+                return false;
+            }
         }
 
-        public ValueTask SaveAndSync(RawClocking clocking)
+        public ValueTask<bool> SaveAndSync(RawClocking clocking)
         {
             throw new NotImplementedException();
         }

@@ -33,7 +33,7 @@
 
                             <Entry Placeholder="Enter the staffId(Matricule)" Margin="20,0,20,0" Text="{Binding NfcBadgeTagInfo}" IsReadOnly="True"/>
 
-                            <mdc:Button Style="{DynamicResource FilledButtonStyle}" Text="Filled" IsVisible="{Binding ShowSaveButton}" Command="{Binding SaveAndSyncCommand}" WidthRequest="180" />
+                            <mdc:Button Style="{DynamicResource FilledButtonStyle}" Text="Save" IsVisible="{Binding ShowSaveButton}" Command="{Binding SaveAndSyncCommand}" WidthRequest="180" />
                         </VerticalStackLayout>
                     </ScrollView>
                 </bottomSheet:SfBottomSheet.BottomSheetContent>
