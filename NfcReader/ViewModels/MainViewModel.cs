@@ -1,4 +1,5 @@
 ﻿using AsyncAwaitBestPractices;
+using NfcReader.Services.Interfaces;
 using Plugin.NFC;
 using System.Diagnostics;
 
@@ -6,9 +7,13 @@ namespace NfcReader.ViewModels
 {
     public partial class MainViewModel : ViewModeBase
     {
+        private readonly IRegistrationService _registrationService;
 
-        public MainViewModel()
+        public MainViewModel(IRegistrationService registrationService)
         {
+            _registrationService = registrationService;
+
+            //Initialize NFC
             Initialize().SafeFireAndForget();
         }
 
@@ -19,8 +24,8 @@ namespace NfcReader.ViewModels
                 CrossNFC.Legacy = false;
                 if (CrossNFC.Current.IsEnabled)
                 {
-                  await AppShell.Current.DisplayAlert("NFC", "NFC is enabled", "OK");
-                    AutoStartAsync().SafeFireAndForget();
+                    //await AppShell.Current.DisplayAlert("NFC", "NFC is enabled", "OK");
+                    await AutoStartAsync();
                 }
                 else
                 {
@@ -52,15 +57,15 @@ namespace NfcReader.ViewModels
             }
             catch (Exception ex)
             {
-                 await AppShell.Current.DisplayAlert("NFC", ex.Message, "OK");
+                await AppShell.Current.DisplayAlert("NFC", ex.Message, "OK");
             }
         }
 
-        async void Current_OnMessageReceived(ITagInfo tagInfo)
+        void Current_OnMessageReceived(ITagInfo tagInfo)
         {
             if (tagInfo == null)
             {
-                 await AppShell.Current.DisplayAlert("NFC", "No tag found", "OK");
+                AppShell.Current.DisplayAlert("NFC", "No tag found", "OK");
                 return;
             }
 
@@ -71,16 +76,16 @@ namespace NfcReader.ViewModels
 
             if (!tagInfo.IsSupported)
             {
-                await AppShell.Current.DisplayAlert("NFC", title, "OK");
+                AppShell.Current.DisplayAlert("NFC", title, "OK");
             }
             else if (tagInfo.IsEmpty)
             {
-                await AppShell.Current.DisplayAlert("NFC", "Empty tag", "OK");
+                AppShell.Current.DisplayAlert("NFC", "Empty tag", "OK");
             }
             else
             {
                 var first = tagInfo.Records[0];
-                await AppShell.Current.DisplayAlert("NFC", first.ToString(), "OK");
+                AppShell.Current.DisplayAlert("NFC", first.ToString(), "OK");
             }
         }
     }
