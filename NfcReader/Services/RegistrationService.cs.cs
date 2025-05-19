@@ -5,6 +5,11 @@ namespace NfcReader.Services
 {
     internal class RegistrationService : IRegistrationService
     {
+        public ValueTask<IReadOnlyCollection<Recording>> GetLocalRecordings()
+        {
+            throw new NotImplementedException();
+        }
+
         public ValueTask<bool> HasBeenRecorded(string badgeId, string staffId)
         {
             throw new NotImplementedException();

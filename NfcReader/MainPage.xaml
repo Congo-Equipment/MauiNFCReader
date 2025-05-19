@@ -1,13 +1,43 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
-             xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.Material"
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
+             xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"  
+             xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.Material"  
+             xmlns:chart="clr-namespace:Syncfusion.Maui.Toolkit.Charts;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:bottomSheet="clr-namespace:Syncfusion.Maui.Toolkit.BottomSheet;assembly=Syncfusion.Maui.Toolkit"
              x:Class="NfcReader.MainPage">
 
     <ScrollView>
         <Grid>
-            <mdc:FAB IconData="{Static icon:Material.Add}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20"/>
+            <CollectionView ItemsSource="{Binding Recordings}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="10" Margin="5" BackgroundColor="{DynamicResource SecondaryBackgroundColor}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="{Binding StaffId}" FontSize="20" FontAttributes="Bold" FontAutoScalingEnabled="True" VerticalOptions="Center" Grid.Column="0"/>
+                                    <Label Text="{Binding BadgeId}" FontSize="14" VerticalOptions="Center" Grid.Column="1"/>
+                                </Grid>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <mdc:FAB x:Name="fabMainBtn" IconData="{Static icon:Material.Add}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20" Clicked="fabMainBtn_Clicked" />
+
+            <bottomSheet:SfBottomSheet x:Name="recordingSheet" FullExpandedRatio="0.50" HalfExpandedRatio="0.50" EnableSwiping="True">
+                <bottomSheet:SfBottomSheet.BottomSheetContent>
+                    <ScrollView>
+                        <VerticalStackLayout Spacing="15">
+                            <Entry Placeholder="Enter the staffId(Matricule)" Margin="20,0,20,0"/>
+                            
+                            <Entry Placeholder="Enter the staffId(Matricule)" Margin="20,0,20,0" Text="{Binding NfcBadgeTagInfo}" IsReadOnly="True"/>
+
+                            <mdc:Button Style="{DynamicResource FilledButtonStyle}" Text="Filled" />
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </bottomSheet:SfBottomSheet.BottomSheetContent>
+            </bottomSheet:SfBottomSheet>
         </Grid>
 
     </ScrollView>

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using NfcReader.Services;
 using NfcReader.Services.Interfaces;
 using NfcReader.ViewModels;
+using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace NfcReader
 {
@@ -14,6 +15,7 @@ namespace NfcReader
             builder
                 .UseMauiApp<App>()
                 .UseMaterialComponents()
+                .ConfigureSyncfusionToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

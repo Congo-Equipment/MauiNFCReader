@@ -23,18 +23,9 @@ namespace NfcReader
             BindingContext = _viewModel;
         }
 
-
-        private void OnCounterClicked(object? sender, EventArgs e)
+        private void fabMainBtn_Clicked(object sender, TouchEventArgs e)
         {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
-
+            recordingSheet.Show();
         }
     }
 }

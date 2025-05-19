@@ -27,5 +27,11 @@ namespace NfcReader.Services.Interfaces
         /// <param name="clocking"></param>
         /// <returns></returns>
         ValueTask SaveAndSync(RawClocking clocking);
+
+        /// <summary>
+        /// Return the list of all recorded badgeId(serial Number) and staffId.
+        /// </summary>
+        /// <returns></returns>
+        ValueTask<IReadOnlyCollection<Recording>> GetLocalRecordings();
     }
 }
