@@ -79,6 +79,11 @@ namespace NfcReader.Backend.Services
 
                 if (result > 0)
                 {
+
+                    // Save the recording to the database
+                    await dbContext.Recordings.AddAsync(recording);
+                    await dbContext.SaveChangesAsync();
+
                     return new Response<string>
                     {
                         Success = true,
@@ -165,6 +170,14 @@ namespace NfcReader.Backend.Services
                     Success = false,
                     Message = ex.Message
                 };
+            }
+        }
+
+        public async IAsyncEnumerable<Recording> Recordings()
+        {
+            await foreach (var record in dbContext.Recordings.AsAsyncEnumerable())
+            {
+                yield return record;
             }
         }
     }

@@ -7,6 +7,7 @@ namespace NfcReader.Backend.Services.Interfaces
     {
         ValueTask<Response<Employee>> GetInfoFromBadgeAsync(string badgeId);
         ValueTask<Response<Employee>> GetInfoFromStaffIdAsync(string staffId);
+        IAsyncEnumerable<Recording> Recordings();
         ValueTask<Response<string>> SaveBadgeIdAsync(Recording recording);
         ValueTask<Response<RawClocking>> SaveClockingAsync(RawClocking clocking);
         ValueTask<Response<IEnumerable<SyncResult>>> SyncBadgesAsync(IEnumerable<Recording> records);

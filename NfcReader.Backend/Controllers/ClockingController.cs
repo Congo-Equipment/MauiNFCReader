@@ -35,5 +35,14 @@ namespace NfcReader.Backend.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
+
+        [HttpGet("recordings")]
+        public async IAsyncEnumerable<Recording> GetRecordings()
+        {
+            await foreach (var item in clockingService.Recordings())
+            {
+                yield return item;
+            }
+        }
     }
 }
