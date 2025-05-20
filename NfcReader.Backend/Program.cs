@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using NfcReader.Backend.Contexts;
 using NfcReader.Backend.Services;
 using NfcReader.Backend.Services.Interfaces;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
