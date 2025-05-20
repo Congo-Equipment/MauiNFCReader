@@ -146,10 +146,12 @@ namespace NfcReader.Backend.Services
 
                 await dbContext.SaveChangesAsync();
 
+                var employee = await dbContext.Employees.FirstOrDefaultAsync(x => x.StaffId == clocking.StaffId);
+
                 return new Response<RawClocking>
                 {
                     Success = true,
-                    Message = $"{clocking.StaffId} Clocked successfully!",
+                    Message = $"{clocking.StaffId} - {employee} Clocked successfully!",
                     Data = entry.Entity
                 };
             }
