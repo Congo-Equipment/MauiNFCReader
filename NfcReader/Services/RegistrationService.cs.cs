@@ -124,6 +124,7 @@ namespace NfcReader.Services
 
                     if (!apiResult.IsSuccessStatusCode)
                     {
+                        var content = apiResult.Content;
                         return new Response<IEnumerable<SyncResult>>
                         {
                             Success = false,
