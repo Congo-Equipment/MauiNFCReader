@@ -5,7 +5,7 @@ namespace NfcReader.Backend.Contexts
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
-        //public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<RawClocking> RawClockings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

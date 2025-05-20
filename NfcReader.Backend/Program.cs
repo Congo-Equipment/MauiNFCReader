@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NfcReader.Backend.Contexts;
+using NfcReader.Backend.Services;
+using NfcReader.Backend.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(x =>
     x.EnableSensitiveDataLogging();
     x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), x => x.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
 });
+
+builder.Services.AddTransient<IClockingService, ClockingService>();
 
 var app = builder.Build();
 

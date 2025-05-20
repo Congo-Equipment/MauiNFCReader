@@ -75,4 +75,8 @@
 	  <Folder Include="Views\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\NfcReader.Shared\NfcReader.Shared.csproj" />
+	</ItemGroup>
+
 </Project>

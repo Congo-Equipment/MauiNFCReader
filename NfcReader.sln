@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NfcReader", "NfcReader\NfcR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NfcReader.Backend", "NfcReader.Backend\NfcReader.Backend.csproj", "{9CEFA1B2-A37A-47FD-914A-7A8710DD677D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NfcReader.Shared", "NfcReader.Shared\NfcReader.Shared.csproj", "{EFE91CB2-92DE-4480-B72A-2011A8E45EBE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,10 @@ Global
 		{9CEFA1B2-A37A-47FD-914A-7A8710DD677D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CEFA1B2-A37A-47FD-914A-7A8710DD677D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CEFA1B2-A37A-47FD-914A-7A8710DD677D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFE91CB2-92DE-4480-B72A-2011A8E45EBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFE91CB2-92DE-4480-B72A-2011A8E45EBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFE91CB2-92DE-4480-B72A-2011A8E45EBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFE91CB2-92DE-4480-B72A-2011A8E45EBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

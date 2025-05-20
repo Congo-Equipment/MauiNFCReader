@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Interfaces\" />
+    <ProjectReference Include="..\NfcReader.Shared\NfcReader.Shared.csproj" />
   </ItemGroup>
 
 </Project>
