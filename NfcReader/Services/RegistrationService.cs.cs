@@ -1,6 +1,7 @@
 ﻿using LiteDB.Async;
 using NfcReader.Models;
 using NfcReader.Services.Interfaces;
+using NfcReader.Shared;
 using NfcReader.Utils;
 using System.Diagnostics;
 
@@ -82,9 +83,90 @@ namespace NfcReader.Services
             }
         }
 
-        public ValueTask<bool> SaveAndSync(RawClocking clocking)
+        public async ValueTask<Response<IEnumerable<SyncResult>>> SaveAndSync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var db = new LiteDatabaseAsync($"Filename={Constants.DB_PATH};Connection=shared");
+                var collection = db.GetCollection<Recording>(nameof(Recording));
+
+                var recordings = await collection
+                       .Query()
+                       .Where(x => x.IsSynced == false)
+                       .ToListAsync();
+
+                if (recordings.Any())
+                {
+                    var apiResult = await apiService.SyncBadges(recordings.ToList());
+
+                    if (!apiResult.IsSuccessStatusCode)
+                    {
+                        return new Response<IEnumerable<SyncResult>>
+                        {
+                            Success = false,
+                            Message = "Failed to sync with the serveur"
+                        };
+                    }
+
+                    return new Response<IEnumerable<SyncResult>>
+                    {
+                        Success = true,
+                        Message = "Sync successful"
+                    };
+                }
+
+                return new Response<IEnumerable<SyncResult>>
+                {
+                    Success = false,
+                    Message = "Nothing to synchronize"
+                };
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error saving and syncing recording: {ex.Message}");
+                Debug.WriteLine(ex.StackTrace);
+                return new Response<IEnumerable<SyncResult>>
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
+            }
         }
+
+        public async ValueTask<Response<string>> SaveAndSync(RawClocking clocking)
+        {
+            try
+            {
+                using var db = new LiteDatabaseAsync($"Filename={Constants.DB_PATH};Connection=shared");
+                var collection = db.GetCollection<RawClocking>(nameof(RawClocking));
+
+                await collection.InsertAsync(clocking);
+
+                var api = await apiService.SaveRawClocking(clocking);
+                if (!api.IsSuccessStatusCode)
+                {
+                    return new Response<string>
+                    {
+                        Success = false,
+                        Message = "Failed to sync with the serveur"
+                    };
+                }
+
+                return new Response<string>
+                {
+                    Success = true,
+                    Message = "Sync successful"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response<string>
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
+            }
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using NfcReader.Models;
+using NfcReader.Shared;
 
 namespace NfcReader.Services.Interfaces
 {
@@ -26,12 +27,13 @@ namespace NfcReader.Services.Interfaces
         /// </summary>
         /// <param name="clocking"></param>
         /// <returns></returns>
-        ValueTask<bool> SaveAndSync(RawClocking clocking);
+        ValueTask<Response<string>> SaveAndSync(RawClocking clocking);
 
         /// <summary>
         /// Return the list of all recorded badgeId(serial Number) and staffId.
         /// </summary>
         /// <returns></returns>
         ValueTask<IReadOnlyCollection<Recording>> GetLocalRecordings();
+        ValueTask<Response<IEnumerable<SyncResult>>> SaveAndSync();
     }
 }

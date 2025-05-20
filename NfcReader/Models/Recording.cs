@@ -6,5 +6,6 @@
         public required string BadgeId { get; set; }
         public required DateTime Created { get; set; }
         public required string StaffId { get; set; }
+        public bool IsSynced { get; set; } = false;
     }
 }
