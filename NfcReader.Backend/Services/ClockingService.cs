@@ -120,6 +120,9 @@ namespace NfcReader.Backend.Services
                     });
                 }
 
+                await dbContext.Recordings.AddRangeAsync(records);
+                await dbContext.SaveChangesAsync();
+
                 return new Response<IEnumerable<SyncResult>>
                 {
                     Success = true,
