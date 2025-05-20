@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Logging;
 using NfcReader.Services;
 using NfcReader.Services.Interfaces;
+using NfcReader.Utils;
 using NfcReader.ViewModels;
+using Refit;
 using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace NfcReader
@@ -23,7 +25,7 @@ namespace NfcReader
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             builder.Services.AddScoped<MainPage>();
@@ -31,6 +33,14 @@ namespace NfcReader
 
             /* service registration */
             builder.Services.AddTransient<IRegistrationService, RegistrationService>();
+
+            /* api service*/
+            builder.Services.AddRefitClient<IApiService>()
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(Constants.BASE_API))
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+                });
 
             return builder.Build();
         }

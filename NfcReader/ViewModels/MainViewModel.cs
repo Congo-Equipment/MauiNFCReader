@@ -26,6 +26,9 @@ namespace NfcReader.ViewModels
         [ObservableProperty]
         private string _inputStaffId;
 
+        [ObservableProperty]
+        private bool _isClockingMode = false;
+
         public MainViewModel(IRegistrationService registrationService)
         {
             _registrationService = registrationService;
@@ -103,8 +106,11 @@ namespace NfcReader.ViewModels
             if (!tagInfo.IsSupported)
             {
                 NfcBadgeTagInfo = serialNumber;
-                ShowSaveButton = !string.IsNullOrWhiteSpace(NfcBadgeTagInfo) && !string.IsNullOrWhiteSpace(InputStaffId);
+                if (!IsClockingMode)
+                    ShowSaveButton = !string.IsNullOrWhiteSpace(NfcBadgeTagInfo) && !string.IsNullOrWhiteSpace(InputStaffId);
                 //AppShell.Current.DisplayAlert("NFC", title, "OK");
+
+                Clock(serialNumber).SafeFireAndForget();
             }
             else if (tagInfo.IsEmpty)
             {
@@ -114,6 +120,26 @@ namespace NfcReader.ViewModels
             {
                 var first = tagInfo.Records[0];
                 AppShell.Current.DisplayAlert("NFC", first.ToString(), "OK");
+            }
+        }
+
+        private async Task Clock(string badgeId)
+        {
+            if (string.IsNullOrWhiteSpace(badgeId))
+            {
+                await AppShell.Current.DisplayAlert("NFC", "Empty tag", "OK");
+            }
+
+            var result = await _registrationService.SaveAndSync(new RawClocking
+            {
+                BadgeId = badgeId,
+                StaffId = InputStaffId,
+                ClockingTime = DateTime.Now,
+            });
+
+            if (!result.Success)
+            {
+                await AppShell.Current.DisplayAlert("NFC", result.Message, "OK");
             }
         }
 
