@@ -213,7 +213,7 @@ namespace NfcReader.Services
                 return new Response<string>
                 {
                     Success = true,
-                    Message = "Sync successful"
+                    Message = result?.Message
                 };
             }
             catch (Exception ex)
