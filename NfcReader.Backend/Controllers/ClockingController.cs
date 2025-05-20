@@ -26,5 +26,14 @@ namespace NfcReader.Backend.Controllers
 
             return BadRequest(result);
         }
+
+        [HttpPost("sync-badges")]
+        public async Task<IActionResult> SyncBadgesAsync([FromBody] IEnumerable<Recording> records)
+        {
+            var result = await clockingService.SyncBadgesAsync(records);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
     }
 }

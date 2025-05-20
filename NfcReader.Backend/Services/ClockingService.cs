@@ -3,6 +3,7 @@ using NfcReader.Backend.Contexts;
 using NfcReader.Backend.Models;
 using NfcReader.Backend.Services.Interfaces;
 using NfcReader.Shared;
+using System.Collections;
 
 namespace NfcReader.Backend.Services
 {
@@ -94,6 +95,41 @@ namespace NfcReader.Backend.Services
             catch (Exception ex)
             {
                 return new Response<string>
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
+            }
+        }
+
+        public async ValueTask<Response<IEnumerable<SyncResult>>> SyncBadgesAsync(IEnumerable<Recording> records)
+        {
+            try
+            {
+                List<SyncResult> syncResults = [];
+                foreach (var record in records)
+                {
+                    var result = await dbContext.Employees.Where(x => x.StaffId == record.StaffId)
+                    .ExecuteUpdateAsync(x => x.SetProperty(b => b.badgeId, record.BadgeId));
+
+                    syncResults.Add(new()
+                    {
+                        StaffId = record.StaffId,
+                        BadgeId = record.BadgeId,
+                        Synced = result >= 0,
+                    });
+                }
+
+                return new Response<IEnumerable<SyncResult>>
+                {
+                    Success = true,
+                    Message = $"{syncResults.Count} records synced successfully!",
+                    Data = syncResults
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response<IEnumerable<SyncResult>>
                 {
                     Success = false,
                     Message = ex.Message
