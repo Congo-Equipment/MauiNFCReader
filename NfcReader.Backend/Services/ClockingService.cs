@@ -123,10 +123,18 @@ namespace NfcReader.Backend.Services
                         BadgeId = record.BadgeId,
                         Synced = result >= 0,
                     });
+
+                    //var exist = await dbContext.Recordings.AnyAsync(x => x.Id == record.Id);
+                    if (!await dbContext.Recordings.AnyAsync(x => x.Id == record.Id))
+                    {
+                        var r = await dbContext.Recordings.AddAsync(record);
+                        await dbContext.SaveChangesAsync();
+
+                    }
                 }
 
-                await dbContext.Recordings.AddRangeAsync(records);
-                await dbContext.SaveChangesAsync();
+                //await dbContext.Recordings.AddRangeAsync(records);
+                //await dbContext.SaveChangesAsync();
 
                 return new Response<IEnumerable<SyncResult>>
                 {
