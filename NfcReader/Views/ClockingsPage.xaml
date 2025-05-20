@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NfcReader.Views.ClockingsPage"
+             Title="Clockings">
+    <Grid>
+        <RefreshView IsRefreshing="{Binding IsBusy,Mode=TwoWay}" Command="{Binding RefreshCommand}">
+            <CollectionView ItemsSource="{Binding Clockings}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border StrokeThickness="0" BackgroundColor="WhiteSmoke" Margin="10,5,10,0" StrokeShape="RoundRectangle 10">
+                            <Grid Padding="10" Margin="5" >
+                                <VerticalStackLayout >
+                                    <Label Text="{Binding StaffId}" FontSize="16" FontAttributes="Bold" FontAutoScalingEnabled="True" VerticalOptions="Center" Grid.Column="0"/>
+                                    <Label Text="{Binding BadgeId}" FontSize="14" VerticalOptions="Center" Grid.Column="1"/>
+                                </VerticalStackLayout>
+
+                                <Label Text="{Binding Created, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontSize="10" VerticalOptions="End"  HorizontalOptions="End"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

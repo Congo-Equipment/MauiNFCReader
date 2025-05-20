@@ -92,7 +92,7 @@ namespace NfcReader.ViewModels
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(InputStaffId))
+            if (string.IsNullOrWhiteSpace(InputStaffId) && !IsClockingMode)
             {
                 AppShell.Current.DisplayAlert("NFC", "Please fill first the staffId(Matricule)", "OK");
                 return;
@@ -106,11 +106,11 @@ namespace NfcReader.ViewModels
             if (!tagInfo.IsSupported)
             {
                 NfcBadgeTagInfo = serialNumber;
-                if (!IsClockingMode)
+                if (IsClockingMode)
+                    Clock(serialNumber).SafeFireAndForget();
+                else
                     ShowSaveButton = !string.IsNullOrWhiteSpace(NfcBadgeTagInfo) && !string.IsNullOrWhiteSpace(InputStaffId);
-                //AppShell.Current.DisplayAlert("NFC", title, "OK");
 
-                Clock(serialNumber).SafeFireAndForget();
             }
             else if (tagInfo.IsEmpty)
             {
@@ -140,6 +140,73 @@ namespace NfcReader.ViewModels
             if (!result.Success)
             {
                 await AppShell.Current.DisplayAlert("NFC", result.Message, "OK");
+            }
+            else
+            {
+                await AppShell.Current.DisplayAlert("NFC", result.Message, "OK");
+            }
+        }
+
+        [RelayCommand]
+        private async Task GotToLogs()
+        {
+            await AppShell.Current.GoToAsync("ClockingsPage", true);
+        }
+
+        [RelayCommand]
+        private async Task SyncExisting()
+        {
+            try
+            {
+                if (IsClockingMode)
+                {
+                    await AppShell.Current.DisplayAlert("NFC", "Clocking mode is enabled please desable it first before synchronization", "OK");
+                    return;
+                }
+                var result = await _registrationService.SaveAndSync();
+                if (!result.Success)
+                {
+                    await AppShell.Current.DisplayAlert("NFC", result.Message, "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await AppShell.Current.DisplayAlert("NFC", "Synchronization failed", "OK");
+            }
+        }
+
+        [RelayCommand]
+        private async Task Refresh()
+        {
+            try
+            {
+                IsBusy = !IsBusy;
+                Recordings = [.. await _registrationService.GetLocalRecordings()];
+                IsBusy = !IsBusy;
+            }
+            catch (Exception ex)
+            {
+                await AppShell.Current.DisplayAlert("NFC", "Error while refreshing data...", "OK");
+            }
+        }
+
+        [RelayCommand]
+        private async Task ClearAll()
+        {
+            try
+            {
+                var dialog = await AppShell.Current.DisplayAlert("NFC", "Would you like to  clear all data, this operation is irreversible", "YES", "NO");
+                if (dialog)
+                {
+                    IsBusy = !IsBusy;
+                    await _registrationService.ClearData();
+                    Recordings = [.. await _registrationService.GetLocalRecordings()];
+                    IsBusy = !IsBusy;
+                }
+            }
+            catch (Exception ex)
+            {
+                await AppShell.Current.DisplayAlert("NFC", "Error while refreshing data...", "OK");
             }
         }
 

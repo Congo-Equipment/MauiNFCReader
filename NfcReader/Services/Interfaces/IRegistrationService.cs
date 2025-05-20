@@ -35,5 +35,7 @@ namespace NfcReader.Services.Interfaces
         /// <returns></returns>
         ValueTask<IReadOnlyCollection<Recording>> GetLocalRecordings();
         ValueTask<Response<IEnumerable<SyncResult>>> SaveAndSync();
+        ValueTask<Response<string>> ClearData();
+        ValueTask<IReadOnlyCollection<RawClocking>> GetLocalClockings();
     }
 }

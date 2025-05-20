@@ -5,15 +5,24 @@
              xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.Material"  
              xmlns:chart="clr-namespace:Syncfusion.Maui.Toolkit.Charts;assembly=Syncfusion.Maui.Toolkit"
              xmlns:bottomSheet="clr-namespace:Syncfusion.Maui.Toolkit.BottomSheet;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:PullToRefreshControl="clr-namespace:Syncfusion.Maui.Toolkit.PullToRefresh;assembly=Syncfusion.Maui.Toolkit"
              x:Class="NfcReader.MainPage" Title="CE Clocking">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Clear data" Priority="0" Order="Secondary" Command="{Binding ClearAllCommand}"/>
+        <ToolbarItem Text="View Logs" Priority="0" Order="Secondary" Command="{Binding GotToLogsCommand}"/>
+    </ContentPage.ToolbarItems>
 
     <ScrollView>
         <Grid RowDefinitions="Auto,*">
             <Grid ColumnDefinitions="*,auto">
-                <mdc:Switch Style="{DynamicResource MarkSwitchStyle}" Grid.Column="1"  IsSelected="{Binding IsClockingMode}"/>
+                <mdc:Switch Style="{DynamicResource MarkSwitchStyle}" Grid.Column="1"  IsSelected="{Binding IsClockingMode,Mode=TwoWay}"/>
             </Grid>
 
             <Grid Grid.Row="1">
+                <RefreshView IsRefreshing="{Binding IsBusy}">
+
+                </RefreshView>
                 <CollectionView ItemsSource="{Binding Recordings}" Margin="0,10,0,0">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
@@ -30,8 +39,10 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
+
                 <mdc:FAB x:Name="fabMainBtn" IconData="{Static icon:Material.Add}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20" Clicked="fabMainBtn_Clicked" />
-                <mdc:FAB x:Name="fabRefreshBtn" IconData="{Static icon:Material.Refresh}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20,0,20,80"/>
+                <mdc:FAB  IconData="{Static icon:Material.CloudSync}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20,0,20,80" Command="{Binding SyncExistingCommand}"/>
+                <mdc:FAB  IconData="{Static icon:Material.Refresh}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20,0,20,140" Command="{Binding RefreshCommand}"/>
 
                 <bottomSheet:SfBottomSheet x:Name="recordingSheet" FullExpandedRatio="0.50" HalfExpandedRatio="0.75" EnableSwiping="True">
                     <bottomSheet:SfBottomSheet.BottomSheetContent>

@@ -4,6 +4,7 @@ using NfcReader.Services;
 using NfcReader.Services.Interfaces;
 using NfcReader.Utils;
 using NfcReader.ViewModels;
+using NfcReader.Views;
 using Refit;
 using Syncfusion.Maui.Toolkit.Hosting;
 
@@ -30,6 +31,9 @@ namespace NfcReader
 
             builder.Services.AddScoped<MainPage>();
             builder.Services.AddTransient<MainViewModel>();
+
+            builder.Services.AddTransient<ClockingsPage>();
+            builder.Services.AddTransient<ClockingPageViewModel>();
 
             /* service registration */
             builder.Services.AddTransient<IRegistrationService, RegistrationService>();

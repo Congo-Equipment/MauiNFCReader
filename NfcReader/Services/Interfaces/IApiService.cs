@@ -1,4 +1,5 @@
 ﻿using NfcReader.Models;
+using NfcReader.Shared;
 using Refit;
 
 namespace NfcReader.Services.Interfaces;
@@ -6,7 +7,7 @@ namespace NfcReader.Services.Interfaces;
 public interface IApiService
 {
     [Post("/clocking/save-raw")]
-    Task<ApiResponse<bool>> SaveRawClocking([Body] RawClocking clocking);
+    Task<ApiResponse<Response<RawClocking>>> SaveRawClocking([Body] RawClocking clocking);
 
     [Post("/clocking/save-recording")]
     Task<ApiResponse<string>> SaveRecording([Body] Recording recording);
