@@ -141,12 +141,16 @@ namespace NfcReader.Backend.Services
         {
             try
             {
+                clocking.Created = DateTime.UtcNow;
                 var entry = await dbContext.RawClockings.AddAsync(clocking);
+
+                await dbContext.SaveChangesAsync();
 
                 return new Response<RawClocking>
                 {
                     Success = true,
-                    Message = $"{clocking.StaffId} Clocked successfully!"
+                    Message = $"{clocking.StaffId} Clocked successfully!",
+                    Data = entry.Entity
                 };
             }
             catch (Exception ex)
