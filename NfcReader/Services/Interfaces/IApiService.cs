@@ -13,7 +13,7 @@ public interface IApiService
     Task<ApiResponse<string>> SaveRecording([Body] Recording recording);
 
     [Post("/clocking/sync-badges")]
-    Task<ApiResponse<bool>> SyncBadges([Body] List<Recording> badges);
+    Task<ApiResponse<Response<IEnumerable<SyncResult>>>> SyncBadges([Body] List<Recording> badges);
 
     [Get("/clocking/employee-info/{badgeId}")]
     Task<ApiResponse<Employee>> GetEmployeeInfo(string badgeId);

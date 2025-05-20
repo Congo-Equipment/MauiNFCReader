@@ -164,10 +164,7 @@ namespace NfcReader.ViewModels
                     return;
                 }
                 var result = await _registrationService.SaveAndSync();
-                if (!result.Success)
-                {
-                    await AppShell.Current.DisplayAlert("NFC", result.Message, "OK");
-                }
+                await AppShell.Current.DisplayAlert("NFC", result.Message, "OK");
             }
             catch (Exception ex)
             {

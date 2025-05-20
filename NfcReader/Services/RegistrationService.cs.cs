@@ -115,7 +115,7 @@ namespace NfcReader.Services
 
                 var recordings = await collection
                        .Query()
-                       //.Where(x => x.IsSynced == false)
+                       .Where(x => x.IsSynced == false)
                        .ToListAsync();
 
                 if (recordings.Any())
@@ -131,10 +131,23 @@ namespace NfcReader.Services
                         };
                     }
 
+                    foreach (var update in apiResult.Content.Data)
+                    {
+                        var recording = await collection
+                            .Query()
+                            .Where(x => x.BadgeId == update.BadgeId && x.StaffId == update.StaffId)
+                            .FirstOrDefaultAsync();
+                        if (recording is not null)
+                        {
+                            recording.IsSynced = true;
+                            await collection.UpdateAsync(recording);
+                        }
+                    }
+
                     return new Response<IEnumerable<SyncResult>>
                     {
                         Success = true,
-                        Message = "Sync successful"
+                        Message = apiResult.Content.Message
                     };
                 }
 
