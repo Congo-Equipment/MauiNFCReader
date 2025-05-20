@@ -8,39 +8,45 @@
              x:Class="NfcReader.MainPage" Title="CE Clocking">
 
     <ScrollView>
-        <Grid>
-            <CollectionView ItemsSource="{Binding Recordings}" Margin="0,10,0,0">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Border StrokeThickness="0" BackgroundColor="WhiteSmoke" Margin="10,5,10,0" StrokeShape="RoundRectangle 10">
-                            <Grid Padding="10" Margin="5" >
-                                <VerticalStackLayout >
-                                    <Label Text="{Binding StaffId}" FontSize="16" FontAttributes="Bold" FontAutoScalingEnabled="True" VerticalOptions="Center" Grid.Column="0"/>
-                                    <Label Text="{Binding BadgeId}" FontSize="14" VerticalOptions="Center" Grid.Column="1"/>
-                                </VerticalStackLayout>
+        <Grid RowDefinitions="Auto,*">
+            <Grid ColumnDefinitions="*,auto">
+                <mdc:Switch Style="{DynamicResource MarkSwitchStyle}" Grid.Column="1"  IsSelected="{Binding IsClockingMode}"/>
+            </Grid>
 
-                                <Label Text="{Binding Created, StringFormat='{0:dd/mm/yyyy HH:mm}'}" FontSize="10" VerticalOptions="End"  HorizontalOptions="End"/>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-            <mdc:FAB x:Name="fabMainBtn" IconData="{Static icon:Material.Add}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20" Clicked="fabMainBtn_Clicked" />
-            <mdc:FAB x:Name="fabRefreshBtn" IconData="{Static icon:Material.Refresh}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20,0,20,80"/>
+            <Grid Grid.Row="1">
+                <CollectionView ItemsSource="{Binding Recordings}" Margin="0,10,0,0">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border StrokeThickness="0" BackgroundColor="WhiteSmoke" Margin="10,5,10,0" StrokeShape="RoundRectangle 10">
+                                <Grid Padding="10" Margin="5" >
+                                    <VerticalStackLayout >
+                                        <Label Text="{Binding StaffId}" FontSize="16" FontAttributes="Bold" FontAutoScalingEnabled="True" VerticalOptions="Center" Grid.Column="0"/>
+                                        <Label Text="{Binding BadgeId}" FontSize="14" VerticalOptions="Center" Grid.Column="1"/>
+                                    </VerticalStackLayout>
 
-            <bottomSheet:SfBottomSheet x:Name="recordingSheet" FullExpandedRatio="0.50" HalfExpandedRatio="0.75" EnableSwiping="True">
-                <bottomSheet:SfBottomSheet.BottomSheetContent>
-                    <ScrollView>
-                        <VerticalStackLayout Spacing="15">
-                            <Entry Placeholder="Enter the staffId(Matricule)" Margin="20,0,20,0" Text="{Binding InputStaffId,Mode=TwoWay}"/>
+                                    <Label Text="{Binding Created, StringFormat='{0:dd/mm/yyyy HH:mm}'}" FontSize="10" VerticalOptions="End"  HorizontalOptions="End"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <mdc:FAB x:Name="fabMainBtn" IconData="{Static icon:Material.Add}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20" Clicked="fabMainBtn_Clicked" />
+                <mdc:FAB x:Name="fabRefreshBtn" IconData="{Static icon:Material.Refresh}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20,0,20,80"/>
 
-                            <Entry Placeholder="Enter the staffId(Matricule)" Margin="20,0,20,0" Text="{Binding NfcBadgeTagInfo}" IsReadOnly="True"/>
+                <bottomSheet:SfBottomSheet x:Name="recordingSheet" FullExpandedRatio="0.50" HalfExpandedRatio="0.75" EnableSwiping="True">
+                    <bottomSheet:SfBottomSheet.BottomSheetContent>
+                        <ScrollView>
+                            <VerticalStackLayout Spacing="15">
+                                <Entry Placeholder="Enter the staffId(Matricule)" Margin="20,0,20,0" Text="{Binding InputStaffId,Mode=TwoWay}"/>
 
-                            <mdc:Button Style="{DynamicResource FilledButtonStyle}" Text="Save" IsVisible="{Binding ShowSaveButton}" Command="{Binding SaveAndSyncCommand}" WidthRequest="180" />
-                        </VerticalStackLayout>
-                    </ScrollView>
-                </bottomSheet:SfBottomSheet.BottomSheetContent>
-            </bottomSheet:SfBottomSheet>
+                                <Entry Placeholder="Enter the staffId(Matricule)" Margin="20,0,20,0" Text="{Binding NfcBadgeTagInfo}" IsReadOnly="True"/>
+
+                                <mdc:Button Style="{DynamicResource FilledButtonStyle}" Text="Save" IsVisible="{Binding ShowSaveButton}" Command="{Binding SaveAndSyncCommand}" WidthRequest="180" />
+                            </VerticalStackLayout>
+                        </ScrollView>
+                    </bottomSheet:SfBottomSheet.BottomSheetContent>
+                </bottomSheet:SfBottomSheet>
+            </Grid>
         </Grid>
 
     </ScrollView>
