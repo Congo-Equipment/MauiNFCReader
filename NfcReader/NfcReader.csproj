@@ -60,6 +60,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="AsyncAwaitBestPractices" Version="9.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="IconPacks.Material" Version="1.0.8940.2-build" />
 		<PackageReference Include="LiteDB.Async" Version="0.1.8" />

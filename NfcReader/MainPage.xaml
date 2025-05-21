@@ -7,13 +7,15 @@
              xmlns:bottomSheet="clr-namespace:Syncfusion.Maui.Toolkit.BottomSheet;assembly=Syncfusion.Maui.Toolkit"
              xmlns:PullToRefreshControl="clr-namespace:Syncfusion.Maui.Toolkit.PullToRefresh;assembly=Syncfusion.Maui.Toolkit"
              xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Toolkit.Popup;assembly=Syncfusion.Maui.Toolkit"
+              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              android:Application.WindowSoftInputModeAdjust="Pan"
              x:Class="NfcReader.MainPage" Title="CE Clocking">
 
-    <ContentPage.ToolbarItems>
+    <!--<ContentPage.ToolbarItems>
         <ToolbarItem Text="Clear data" Priority="0" Order="Secondary" Command="{Binding ClearAllCommand}"/>
         <ToolbarItem Text="View Logs" Priority="0" Order="Secondary" Command="{Binding GotToLogsCommand}"/>
-    </ContentPage.ToolbarItems>
+    </ContentPage.ToolbarItems>-->
 
     <!--<ScrollView>-->
     <Grid RowDefinitions="Auto,*">
@@ -22,31 +24,31 @@
         </Grid>
 
         <Grid Grid.Row="1" Margin="0,0,0,0">
-            <RefreshView IsRefreshing="{Binding IsBusy}">
+            <RefreshView IsRefreshing="{Binding IsBusy}" Command="{Binding RefreshCommand}">
+                <CollectionView ItemsSource="{Binding Recordings}" Margin="0,10,0,10">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border StrokeThickness="0" BackgroundColor="WhiteSmoke" Margin="10,5,10,0" StrokeShape="RoundRectangle 10">
+                                <Grid Padding="10" Margin="5" >
+                                    <VerticalStackLayout >
+                                        <Label Text="{Binding StaffId}" FontSize="16" FontAttributes="Bold" FontAutoScalingEnabled="True" VerticalOptions="Center" Grid.Column="0"/>
+                                        <Label Text="{Binding BadgeId}" FontSize="14" VerticalOptions="Center" Grid.Column="1"/>
+                                    </VerticalStackLayout>
 
+                                    <Label Text="{Binding Created, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontSize="10" VerticalOptions="End"  HorizontalOptions="End"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
             </RefreshView>
-            <CollectionView ItemsSource="{Binding Recordings}" Margin="0,10,0,10">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Border StrokeThickness="0" BackgroundColor="WhiteSmoke" Margin="10,5,10,0" StrokeShape="RoundRectangle 10">
-                            <Grid Padding="10" Margin="5" >
-                                <VerticalStackLayout >
-                                    <Label Text="{Binding StaffId}" FontSize="16" FontAttributes="Bold" FontAutoScalingEnabled="True" VerticalOptions="Center" Grid.Column="0"/>
-                                    <Label Text="{Binding BadgeId}" FontSize="14" VerticalOptions="Center" Grid.Column="1"/>
-                                </VerticalStackLayout>
 
-                                <Label Text="{Binding Created, StringFormat='{0:dd/MM/yyyy HH:mm}'}" FontSize="10" VerticalOptions="End"  HorizontalOptions="End"/>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
 
             <mdc:FAB x:Name="fabMainBtn" IconData="{Static icon:Material.Add}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20" Clicked="fabMainBtn_Clicked" />
             <mdc:FAB  IconData="{Static icon:Material.CloudSync}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20,0,20,80" Command="{Binding SyncExistingCommand}"/>
-            <mdc:FAB  IconData="{Static icon:Material.Refresh}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20,0,20,140" Command="{Binding RefreshCommand}"/>
+            <!--<mdc:FAB  IconData="{Static icon:Material.Refresh}" Style="{DynamicResource SecondaryFABStyle}" Shape="Full" Elevation="Level5" VerticalOptions="End" HorizontalOptions="End" Margin="20,0,20,140" />-->
 
-            <bottomSheet:SfBottomSheet x:Name="recordingSheet" FullExpandedRatio="0.50" HalfExpandedRatio="0.5" EnableSwiping="True" CornerRadius="20">
+            <bottomSheet:SfBottomSheet x:Name="recordingSheet" FullExpandedRatio="0.75" HalfExpandedRatio="0.75" EnableSwiping="True" CornerRadius="20">
                 <bottomSheet:SfBottomSheet.BottomSheetContent>
                     <ScrollView>
                         <VerticalStackLayout Spacing="15">
@@ -59,6 +61,17 @@
                     </ScrollView>
                 </bottomSheet:SfBottomSheet.BottomSheetContent>
             </bottomSheet:SfBottomSheet>
+
+            <syncfusion:SfPopup x:Name="popup" AnimationMode="Zoom" IsOpen="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" ShowFooter="False" ShowHeader="False">
+                <syncfusion:SfPopup.ContentTemplate>
+                    <DataTemplate>
+                        <Grid VerticalOptions="Fill" HorizontalOptions="Fill" RowDefinitions="Auto,*">
+                            <Label Text="{Binding Message,Mode=TwoWay}"/>
+                            <Image Grid.Row="1" Source="ok.svg" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </syncfusion:SfPopup.ContentTemplate>
+            </syncfusion:SfPopup>
         </Grid>
     </Grid>
 

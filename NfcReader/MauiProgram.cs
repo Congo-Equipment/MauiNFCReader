@@ -1,4 +1,5 @@
-﻿using Material.Components.Maui.Extensions;
+﻿using CommunityToolkit.Maui;
+using Material.Components.Maui.Extensions;
 using Microsoft.Extensions.Logging;
 using NfcReader.Services;
 using NfcReader.Services.Interfaces;
@@ -17,6 +18,7 @@ namespace NfcReader
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .UseMaterialComponents()
                 .ConfigureSyncfusionToolkit()
                 .ConfigureFonts(fonts =>

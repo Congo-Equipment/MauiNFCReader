@@ -29,6 +29,11 @@ namespace NfcReader.ViewModels
         [ObservableProperty]
         private bool _isClockingMode = false;
 
+        [ObservableProperty]
+        private string _message = string.Empty;
+
+
+
         public MainViewModel(IRegistrationService registrationService)
         {
             _registrationService = registrationService;
@@ -125,6 +130,7 @@ namespace NfcReader.ViewModels
 
         private async Task Clock(string badgeId)
         {
+            //IsBusy = true;
             if (string.IsNullOrWhiteSpace(badgeId))
             {
                 await AppShell.Current.DisplayAlert("NFC", "Empty tag", "OK");
@@ -145,6 +151,9 @@ namespace NfcReader.ViewModels
             {
                 await AppShell.Current.DisplayAlert("NFC", result.Message, "OK");
             }
+            //await Task.Delay(500);
+            //IsBusy = false;
+            //Message = result.Message;
         }
 
         [RelayCommand]
@@ -177,9 +186,9 @@ namespace NfcReader.ViewModels
         {
             try
             {
-                IsBusy = !IsBusy;
+                IsBusy = true;
                 Recordings = [.. await _registrationService.GetLocalRecordings()];
-                IsBusy = !IsBusy;
+                IsBusy = false;
             }
             catch (Exception ex)
             {
@@ -195,10 +204,10 @@ namespace NfcReader.ViewModels
                 var dialog = await AppShell.Current.DisplayAlert("NFC", "Would you like to  clear all data, this operation is irreversible", "YES", "NO");
                 if (dialog)
                 {
-                    IsBusy = !IsBusy;
+                    IsBusy = true;
                     await _registrationService.ClearData();
                     Recordings = [.. await _registrationService.GetLocalRecordings()];
-                    IsBusy = !IsBusy;
+                    IsBusy = false;
                 }
             }
             catch (Exception ex)
