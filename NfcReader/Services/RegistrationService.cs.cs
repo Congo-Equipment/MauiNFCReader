@@ -267,5 +267,50 @@ namespace NfcReader.Services
             }
         }
 
+        public async ValueTask<Response<string>> SaveAndSync(IEnumerable<Recording> recordings)
+        {
+            try
+            {
+                if (recordings is null || !recordings.Any())
+                {
+                    return new Response<string>
+                    {
+                        Success = false,
+                        Message = "No recordings to save"
+                    };
+                }
+
+                using var db = new LiteDatabaseAsync($"Filename={Constants.DB_PATH};Connection=shared");
+                var collection = db.GetCollection<Recording>(nameof(Recording));
+
+                var result = await collection.InsertBulkAsync(recordings.ToList());
+
+                if (result == 0)
+                {
+                    return new Response<string>
+                    {
+                        Success = false,
+                        Message = "Failed to save recordings locally"
+                    };
+                }
+
+                return new Response<string>
+                {
+                    Success = true,
+                    Message = $"{result} Recordings saved"
+                };
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error saving and syncing recording: {ex.Message}");
+                Debug.WriteLine(ex.StackTrace);
+                return new Response<string>
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
+            }
+
+        }
     }
 }
