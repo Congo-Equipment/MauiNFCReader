@@ -62,7 +62,7 @@
                 </bottomSheet:SfBottomSheet.BottomSheetContent>
             </bottomSheet:SfBottomSheet>
 
-            <syncfusion:SfPopup x:Name="popup" AnimationMode="Zoom" IsOpen="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" ShowFooter="False" ShowHeader="False">
+            <!--<syncfusion:SfPopup x:Name="popup" AnimationMode="Zoom" IsOpen="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" ShowFooter="False" ShowHeader="False">
                 <syncfusion:SfPopup.ContentTemplate>
                     <DataTemplate>
                         <Grid VerticalOptions="Fill" HorizontalOptions="Fill" RowDefinitions="Auto,*">
@@ -71,7 +71,7 @@
                         </Grid>
                     </DataTemplate>
                 </syncfusion:SfPopup.ContentTemplate>
-            </syncfusion:SfPopup>
+            </syncfusion:SfPopup>-->
         </Grid>
     </Grid>
 

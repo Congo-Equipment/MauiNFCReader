@@ -13,7 +13,7 @@ namespace NfcReader.Backend.Services
         {
             try
             {
-                var emp = await dbContext.Employees.FirstOrDefaultAsync(x => x.badgeId == badgeId);
+                var emp = await dbContext.Employees.FirstOrDefaultAsync(x => x.StaffId == badgeId);
                 if (emp is null)
                 {
                     return new Response<Employee>

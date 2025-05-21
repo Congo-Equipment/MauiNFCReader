@@ -9,7 +9,7 @@ public class Employee
     public string? Names { get; set; }
     public string? Surnames { get; set; }
     public string? StaffId { get; set; }
-    public string? badgeId { get; set; }
+    //public string? badgeId { get; set; }
     public string? Department { get; set; }
     public string? Position { get; set; }
 
@@ -31,7 +31,7 @@ public class EmployeeEntityTypeConfiguration : IEntityTypeConfiguration<Employee
         builder.Property(x => x.Names).HasColumnName("NOMS").HasMaxLength(50);
         builder.Property(x => x.Surnames).HasColumnName("PRENOMS").HasMaxLength(50);
         builder.Property(x => x.StaffId).HasColumnName("MATRICULE").HasMaxLength(50);
-        builder.Property(x => x.badgeId).HasColumnName("BADGEID").HasMaxLength(50);
+        //builder.Property(x => x.badgeId).HasColumnName("BADGEID").HasMaxLength(50);
         builder.Property(x => x.Department).HasColumnName("OIDDEPARTEMENT").HasMaxLength(50);
         builder.Property(x => x.Position).HasColumnName("OIDFONCTION").HasMaxLength(50);
     }
