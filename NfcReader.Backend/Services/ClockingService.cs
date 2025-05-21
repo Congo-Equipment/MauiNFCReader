@@ -74,28 +74,28 @@ namespace NfcReader.Backend.Services
         {
             try
             {
-                var result = await dbContext.Employees.Where(x => x.StaffId == recording.StaffId)
-                     .ExecuteUpdateAsync(x => x.SetProperty(b => b.badgeId, recording.BadgeId));
+                //var result = await dbContext.Employees.Where(x => x.StaffId == recording.StaffId)
+                //     .ExecuteUpdateAsync(x => x.SetProperty(b => b.badgeId, recording.BadgeId));
 
-                if (result > 0)
-                {
+                //if (result > 0)
+                //{
 
-                    // Save the recording to the database
-                    await dbContext.Recordings.AddAsync(recording);
-                    await dbContext.SaveChangesAsync();
-
-                    return new Response<string>
-                    {
-                        Success = true,
-                        Message = $"Badge id updated successfully for {recording.StaffId}"
-                    };
-                }
+                // Save the recording to the database
+                await dbContext.Recordings.AddAsync(recording);
+                await dbContext.SaveChangesAsync();
 
                 return new Response<string>
                 {
-                    Success = false,
-                    Message = $"Failed to update badge id for {recording.StaffId}"
+                    Success = true,
+                    Message = $"Badge id updated successfully for {recording.StaffId}"
                 };
+                //}
+
+                //return new Response<string>
+                //{
+                //    Success = false,
+                //    Message = $"Failed to update badge id for {recording.StaffId}"
+                //};
             }
             catch (Exception ex)
             {
@@ -114,15 +114,9 @@ namespace NfcReader.Backend.Services
                 List<SyncResult> syncResults = [];
                 foreach (var record in records)
                 {
-                    var result = await dbContext.Employees.Where(x => x.StaffId == record.StaffId)
-                    .ExecuteUpdateAsync(x => x.SetProperty(b => b.badgeId, record.BadgeId));
+                    //var result = await dbContext.Employees.Where(x => x.StaffId == record.StaffId)
+                    //.ExecuteUpdateAsync(x => x.SetProperty(b => b.badgeId, record.BadgeId));
 
-                    syncResults.Add(new()
-                    {
-                        StaffId = record.StaffId,
-                        BadgeId = record.BadgeId,
-                        Synced = result >= 0,
-                    });
 
                     //var exist = await dbContext.Recordings.AnyAsync(x => x.Id == record.Id);
                     if (!await dbContext.Recordings.AnyAsync(x => x.Id == record.Id))
@@ -131,6 +125,13 @@ namespace NfcReader.Backend.Services
                         await dbContext.SaveChangesAsync();
 
                     }
+
+                    syncResults.Add(new()
+                    {
+                        StaffId = record.StaffId,
+                        BadgeId = record.BadgeId,
+                        Synced = true
+                    });
                 }
 
                 //await dbContext.Recordings.AddRangeAsync(records);
@@ -162,7 +163,10 @@ namespace NfcReader.Backend.Services
 
                 await dbContext.SaveChangesAsync();
 
-                var employee = await dbContext.Employees.FirstOrDefaultAsync(x => x.StaffId == clocking.StaffId);
+                var hasParsed = int.TryParse(clocking.StaffId, out int toInt);
+
+                var employee = hasParsed ? await dbContext.Employees.FirstOrDefaultAsync(x => x.StaffId == toInt.ToString())
+                    : await dbContext.Employees.FirstOrDefaultAsync(x => x.StaffId == clocking.StaffId);
 
                 return new Response<RawClocking>
                 {

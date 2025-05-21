@@ -15,7 +15,13 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApplicationDbContext>(x =>
 {
     x.EnableSensitiveDataLogging();
+#if DEBUG
     x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), x => x.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+#elif RELEASE
+    x.UseSqlServer(builder.Configuration.GetConnectionString("Production"), x => x.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+#else
+    x.UseSqlServer(builder.Configuration.GetConnectionString("Stagging"), x => x.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+#endif
 });
 
 builder.Services.AddTransient<IClockingService, ClockingService>();
