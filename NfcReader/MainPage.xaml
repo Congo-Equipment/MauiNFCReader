@@ -7,7 +7,7 @@
              xmlns:bottomSheet="clr-namespace:Syncfusion.Maui.Toolkit.BottomSheet;assembly=Syncfusion.Maui.Toolkit"
              xmlns:PullToRefreshControl="clr-namespace:Syncfusion.Maui.Toolkit.PullToRefresh;assembly=Syncfusion.Maui.Toolkit"
              xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
-             android:Application.WindowSoftInputModeAdjust="Resize"
+             android:Application.WindowSoftInputModeAdjust="Pan"
              x:Class="NfcReader.MainPage" Title="CE Clocking">
 
     <ContentPage.ToolbarItems>

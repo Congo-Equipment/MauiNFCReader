@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
+              xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.Material"  
+             x:Class="NfcReader.Views.SettingsPage"
+             Title="Settings">
+    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="15">
+        <VerticalStackLayout  Margin="20,0">
+            <Label Text="Pull server data"/>
+            <Button Text="Pull"/>
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="1" Margin="20,0">
+            <Label Text="Clear local information"/>
+            <Button Text="Clean data"/>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

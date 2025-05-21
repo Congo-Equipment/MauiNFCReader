@@ -35,8 +35,12 @@ namespace NfcReader
             builder.Services.AddTransient<ClockingsPage>();
             builder.Services.AddTransient<ClockingPageViewModel>();
 
+            builder.Services.AddTransient<SettingsPage>();
+            builder.Services.AddTransient<SettingsPageViewModel>();
+
             /* service registration */
             builder.Services.AddTransient<IRegistrationService, RegistrationService>();
+            builder.Services.AddTransient<ICustomApi, CustomApi>();
 
             /* api service*/
             builder.Services.AddRefitClient<IApiService>()
