@@ -1,4 +1,5 @@
-﻿using AsyncAwaitBestPractices;
+﻿using Android.Media;
+using AsyncAwaitBestPractices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NfcReader.Models;
@@ -32,6 +33,9 @@ namespace NfcReader.ViewModels
         [ObservableProperty]
         private string _message = string.Empty;
 
+        [ObservableProperty]
+        private Ringtone? _ringSound;
+
 
 
         public MainViewModel(IRegistrationService registrationService)
@@ -54,6 +58,10 @@ namespace NfcReader.ViewModels
                     await AutoStartAsync();
 
                     Recordings = [.. await _registrationService.GetLocalRecordings()];
+
+                    var instance = Platform.CurrentActivity;
+                    Android.Net.Uri uri = RingtoneManager.GetDefaultUri(RingtoneType.Notification);
+                    RingSound = RingtoneManager.GetRingtone(instance.ApplicationContext, uri);
                 }
                 else
                 {
@@ -150,6 +158,8 @@ namespace NfcReader.ViewModels
             else
             {
                 await AppShell.Current.DisplayAlert("NFC", result.Message, "OK");
+                RingSound?.Play();
+
             }
             //await Task.Delay(500);
             //IsBusy = false;

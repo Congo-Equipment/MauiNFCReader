@@ -1,5 +1,7 @@
 ﻿using NfcReader.Models;
 using NfcReader.Shared;
+using System;
+using System.Threading.Tasks;
 
 namespace NfcReader.Services.Interfaces
 {
@@ -38,5 +40,11 @@ namespace NfcReader.Services.Interfaces
         ValueTask<Response<string>> ClearData();
         ValueTask<IReadOnlyCollection<RawClocking>> GetLocalClockings();
         ValueTask<Response<string>> SaveAndSync(IEnumerable<Recording> recordings);
+
+        /// <summary>
+        /// Gets the count of RawClocking records for today.
+        /// </summary>
+        /// <returns>Number of clockings for the current day.</returns>
+        ValueTask<int> GetTodayClockingCount();
     }
 }

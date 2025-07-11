@@ -312,5 +312,26 @@ namespace NfcReader.Services
             }
 
         }
+
+        public async ValueTask<int> GetTodayClockingCount()
+        {
+            try
+            {
+                using var db = new LiteDatabaseAsync($"Filename={Constants.DB_PATH};Connection=shared");
+                var collection = db.GetCollection<RawClocking>(nameof(RawClocking));
+                var today = DateTime.Now.Date;
+                var count = await collection
+                    .Query()
+                    .Where(x => x.Created.Date == today)
+                    .CountAsync();
+                return count;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error getting today's clocking count: {ex.Message}");
+                Debug.WriteLine(ex.StackTrace);
+                return 0;
+            }
+        }
     }
 }
