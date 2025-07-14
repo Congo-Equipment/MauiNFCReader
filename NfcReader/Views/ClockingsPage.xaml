@@ -5,7 +5,7 @@
              Title="Clockings">
     <Grid>
         <RefreshView IsRefreshing="{Binding IsBusy,Mode=TwoWay}" Command="{Binding RefreshCommand}">
-            <CollectionView ItemsSource="{Binding Clockings}">
+            <!--<CollectionView ItemsSource="{Binding Clockings}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Border StrokeThickness="0" BackgroundColor="WhiteSmoke" Margin="10,5,10,0" StrokeShape="RoundRectangle 10">
@@ -20,7 +20,50 @@
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
+            </CollectionView>-->
+            <CollectionView 
+    ItemsSource="{Binding Clockings}" 
+    Margin="10"
+    SelectionMode="None"
+    VerticalOptions="FillAndExpand">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border 
+                StrokeThickness="0" 
+                BackgroundColor="#F5F5F5"  
+                            Margin="0,5"
+                StrokeShape="RoundRectangle 12">
+
+                            <Grid Padding="12">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label 
+                            Text="{Binding StaffId}" 
+                            FontSize="16" 
+                            FontAttributes="Bold" 
+                            TextColor="#222222" 
+                            FontAutoScalingEnabled="True" />
+
+                                    <Label 
+                            Text="{Binding BadgeId}" 
+                            FontSize="14" 
+                            TextColor="#555555"
+                            FontAutoScalingEnabled="True" />
+                                </VerticalStackLayout>
+
+                                <Label 
+                        Text="{Binding Created, StringFormat='{0:dd/MM/yyyy HH:mm}'}" 
+                        FontSize="12" 
+                        TextColor="#888888"
+                        HorizontalOptions="End" 
+                        VerticalOptions="End"
+                        Margin="0,5,0,0" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
             </CollectionView>
+
         </RefreshView>
     </Grid>
 </ContentPage>

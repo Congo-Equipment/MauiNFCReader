@@ -4,26 +4,27 @@
               xmlns:mdc="clr-namespace:Material.Components.Maui;assembly=Material.Components.Maui"
               xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.Material"  
              xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Toolkit.Popup;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:btnStyles="clr-namespace:NfcReader.Utils.Styles;assembly=NfcReader"
              x:Class="NfcReader.Views.SettingsPage"
              Title="Settings">
     <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="15">
         <VerticalStackLayout  Margin="20,0">
-            <Label Text="Pull server data"/>
-            <Button Text="Pull" Command="{Binding InitializeCommand}"/>
+            <Label Text="Pull server data" Style="{StaticResource BodyTextStyle}"/>
+            <Button Text="Pull" Command="{Binding InitializeCommand}" Style="{StaticResource AccentButtonStyle}"/>
         </VerticalStackLayout>
 
         <VerticalStackLayout Grid.Row="1" Margin="20,0">
-            <Label Text="Clear local information"/>
-            <Button Text="Clean data" Command="{Binding ClearDataCommand}"/>
+            <Label Text="Clear local information" Style="{StaticResource BodyTextStyle}"/>
+            <Button Text="Clean data" Command="{Binding ClearDataCommand}" Style="{StaticResource DangerButtonStyle}"/>
         </VerticalStackLayout>
 
-        <syncfusion:SfPopup x:Name="popup" AnimationMode="Zoom" IsOpen="{Binding IsBusy}" ShowFooter="False" ShowHeader="False">
+        <syncfusion:SfPopup x:Name="popup" AnimationMode="Zoom" IsOpen="{Binding IsBusy}" ShowFooter="False" ShowHeader="False" >
             <syncfusion:SfPopup.ContentTemplate>
                 <DataTemplate>
                     <Grid VerticalOptions="Center" HorizontalOptions="Center">
                         <VerticalStackLayout Spacing="10">
-                            <Label Text="{Binding RecordingCount,Mode=TwoWay}"/>
-                            <ActivityIndicator IsVisible="True" IsRunning="True" HeightRequest="50"/>
+                            <Label Text="{Binding RecordingCount,Mode=TwoWay}" Style="{StaticResource SectionHeaderTextStyle}"/>
+                            <ActivityIndicator IsVisible="True" IsRunning="True" HeightRequest="50" Style="{StaticResource PrimaryActivityIndicatorStyle}"/>
                         </VerticalStackLayout>
                     </Grid>
                 </DataTemplate>
