@@ -233,10 +233,11 @@ namespace NfcReader.Services
             }
             catch (Exception ex)
             {
+                Debug.Print($"Error saving and syncing clocking: {ex.Message}");
                 return new Response<string>
                 {
                     Success = false,
-                    Message = ex.Message
+                    Message = "Error saving and syncing clocking "
                 };
             }
         }
