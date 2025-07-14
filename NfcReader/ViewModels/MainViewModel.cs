@@ -1,5 +1,6 @@
 ﻿using Android.Media;
 using AsyncAwaitBestPractices;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NfcReader.Models;
@@ -65,12 +66,14 @@ namespace NfcReader.ViewModels
                 }
                 else
                 {
-                    await AppShell.Current.DisplayAlert("NFC", "NFC is not enabled", "OK");
+                    CrossNFC.Current.OnMessageReceived -= Current_OnMessageReceived;
+                    await AppShell.Current.DisplaySnackbar("NFC is not enabled\n\r Please enable NFC in your device settings", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error initializing NFC: {ex.Message}");
+                await AppShell.Current.DisplaySnackbar("Error initializing NFC", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
             }
         }
 
@@ -93,7 +96,8 @@ namespace NfcReader.ViewModels
             }
             catch (Exception ex)
             {
-                await AppShell.Current.DisplayAlert("NFC", ex.Message, "OK");
+                Debug.WriteLine($"Error starting NFC listening: {ex.Message}");
+                await AppShell.Current.DisplaySnackbar("Error starting NFC listening", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
             }
         }
 
@@ -101,13 +105,13 @@ namespace NfcReader.ViewModels
         {
             if (tagInfo == null)
             {
-                AppShell.Current.DisplayAlert("NFC", "No tag found", "OK");
+                AppShell.Current.DisplaySnackbar("No tag found", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(InputStaffId) && !IsClockingMode)
             {
-                AppShell.Current.DisplayAlert("NFC", "Please fill first the staffId(Matricule)", "OK");
+                AppShell.Current.DisplaySnackbar("Please fill first the staffId(Matricule)", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
                 return;
             }
 
@@ -127,12 +131,12 @@ namespace NfcReader.ViewModels
             }
             else if (tagInfo.IsEmpty)
             {
-                AppShell.Current.DisplayAlert("NFC", "Empty tag", "OK");
+                AppShell.Current.DisplaySnackbar("Empty tag", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
             }
             else
             {
                 var first = tagInfo.Records[0];
-                AppShell.Current.DisplayAlert("NFC", first.ToString(), "OK");
+                AppShell.Current.DisplaySnackbar($"Tag Info: {first.ToString()}", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarDefaultStyle);
             }
         }
 
@@ -141,7 +145,7 @@ namespace NfcReader.ViewModels
             //IsBusy = true;
             if (string.IsNullOrWhiteSpace(badgeId))
             {
-                await AppShell.Current.DisplayAlert("NFC", "Empty tag", "OK");
+                await AppShell.Current.DisplaySnackbar("Empty tag", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
             }
 
             var result = await _registrationService.SaveAndSync(new RawClocking
@@ -153,11 +157,11 @@ namespace NfcReader.ViewModels
 
             if (!result.Success)
             {
-                await AppShell.Current.DisplayAlert("NFC", result.Message, "OK");
+                await AppShell.Current.DisplaySnackbar(result.Message ?? "Operation completed successfully", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
             }
             else
             {
-                await AppShell.Current.DisplayAlert("NFC", result.Message, "OK");
+                await AppShell.Current.DisplaySnackbar(result.Message ?? "Operation completed with errors", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarDefaultStyle);
                 RingSound?.Play();
 
             }
@@ -179,15 +183,15 @@ namespace NfcReader.ViewModels
             {
                 if (IsClockingMode)
                 {
-                    await AppShell.Current.DisplayAlert("NFC", "Clocking mode is enabled please desable it first before synchronization", "OK");
+                    await AppShell.Current.DisplaySnackbar("Clocking mode is enabled, please disable it first before synchronization", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
                     return;
                 }
                 var result = await _registrationService.SaveAndSync();
-                await AppShell.Current.DisplayAlert("NFC", result.Message, "OK");
+                await AppShell.Current.DisplaySnackbar(result.Message ?? "Operation completed successfully", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarSucceesStyle);
             }
             catch (Exception ex)
             {
-                await AppShell.Current.DisplayAlert("NFC", "Synchronization failed", "OK");
+                await AppShell.Current.DisplaySnackbar("Synchronization failed", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
             }
         }
 
@@ -202,7 +206,9 @@ namespace NfcReader.ViewModels
             }
             catch (Exception ex)
             {
-                await AppShell.Current.DisplayAlert("NFC", "Error while refreshing data...", "OK");
+                Debug.WriteLine($"Error while refreshing data: {ex.Message}");
+                IsBusy = false;
+                await AppShell.Current.DisplaySnackbar("Error while refreshing data", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
             }
         }
 
@@ -222,7 +228,9 @@ namespace NfcReader.ViewModels
             }
             catch (Exception ex)
             {
-                await AppShell.Current.DisplayAlert("NFC", "Error while refreshing data...", "OK");
+                Debug.WriteLine($"Error while clearing data: {ex.Message}");
+                IsBusy = false;
+                await AppShell.Current.DisplaySnackbar("Error while clearing data", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
             }
         }
 
@@ -232,7 +240,7 @@ namespace NfcReader.ViewModels
         {
             if (string.IsNullOrWhiteSpace(NfcBadgeTagInfo) || string.IsNullOrWhiteSpace(InputStaffId))
             {
-                await AppShell.Current.DisplayAlert("NFC", "Please fill first the staffId(Matricule)", "OK");
+                await AppShell.Current.DisplaySnackbar("Please fill first the staffId(Matricule)", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
                 return;
             }
 
@@ -250,13 +258,15 @@ namespace NfcReader.ViewModels
                 NfcBadgeTagInfo = string.Empty;
                 InputStaffId = string.Empty;
 
-                await AppShell.Current.DisplayAlert("NFC", "Saved successfully", "OK");
+                ShowSaveButton = false;
+                await AppShell.Current.DisplaySnackbar("Saved successfully", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarSucceesStyle);
 
+                // Refresh the recordings list
                 Recordings = [.. await _registrationService.GetLocalRecordings()];
             }
             else
             {
-                await AppShell.Current.DisplayAlert("NFC", "Error saving the recording", "OK");
+                await AppShell.Current.DisplaySnackbar("Error saving the recording", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
             }
 
         }
