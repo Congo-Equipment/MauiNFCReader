@@ -191,6 +191,8 @@ namespace NfcReader.Services
                     };
                 }
 
+                await collection.InsertAsync(clocking);
+
                 var get = await recordings
                     .Query()
                     .Where(x => x.BadgeId == clocking.BadgeId)
@@ -200,7 +202,7 @@ namespace NfcReader.Services
                 if (get is null) return new Response<string>
                 {
                     Success = false,
-                    Message = "Does not exist"
+                    Message = "Does not exist or Not Recorded"
                 };
 
                 clocking.StaffId = get?.StaffId;
