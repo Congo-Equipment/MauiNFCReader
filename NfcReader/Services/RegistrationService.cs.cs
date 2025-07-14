@@ -191,7 +191,6 @@ namespace NfcReader.Services
                     };
                 }
 
-                await collection.InsertAsync(clocking);
 
                 var get = await recordings
                     .Query()
