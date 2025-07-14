@@ -40,7 +40,7 @@ namespace NfcReader
             builder.Services.AddTransient<SettingsPage>();
             builder.Services.AddTransient<SettingsPageViewModel>();
 
-            builder.Services.AddScoped<ActivityTrackingPage>();
+            builder.Services.AddTransient<ActivityTrackingPage>();
             builder.Services.AddTransient<ActivityTrackingPageViewModel>();
 
             /* service registration */

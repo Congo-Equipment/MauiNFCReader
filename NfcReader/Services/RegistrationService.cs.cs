@@ -88,7 +88,7 @@ namespace NfcReader.Services
                 if (response.IsSuccessStatusCode)
                 {
                     // If the API call was successful, delete the local recording
-                    Debug.Print($"API call failed: {response.ReasonPhrase}");
+                    Debug.Print($"API call succeeded: {response.ReasonPhrase}");
                 }
                 else
                 {

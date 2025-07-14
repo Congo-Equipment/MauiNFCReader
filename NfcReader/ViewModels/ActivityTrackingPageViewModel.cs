@@ -32,6 +32,9 @@ namespace NfcReader.ViewModels
         [ObservableProperty]
         private string? _nfcBadgeTagInfo;
 
+        [ObservableProperty]
+        private string? _currentBadgeOwner;
+
         public ActivityTrackingPageViewModel(IRegistrationService registrationService)
         {
             _registrationService = registrationService;
@@ -52,13 +55,15 @@ namespace NfcReader.ViewModels
                     //await AppShell.Current.DisplayAlert("NFC", "NFC is enabled", "OK");
                     await AutoStartAsync();
 
+                    CurrentBadgeOwner = "Waiting for tag...";
+
                     ClockingsCount = await _registrationService.GetTodayClockingCount();
 
                     var instance = Platform.CurrentActivity;
                     Android.Net.Uri uri = RingtoneManager.GetDefaultUri(RingtoneType.Notification);
                     RingSound = RingtoneManager.GetRingtone(instance.ApplicationContext, uri);
 
-                    Android.Net.Uri uriFailed = RingtoneManager.GetDefaultUri(RingtoneType.Alarm);
+                    Android.Net.Uri uriFailed = RingtoneManager.GetDefaultUri(RingtoneType.Ringtone);
                     RingSoundFailed = RingtoneManager.GetRingtone(instance.ApplicationContext, uriFailed);
                 }
                 else
@@ -142,19 +147,22 @@ namespace NfcReader.ViewModels
             if (!result.Success)
             {
                 //await AppShell.Current.DisplayAlert("NFC", result.Message, "OK");
-                IsSuccessful = true;
-                ClockingsCount++;// Increment the count of clockings based on the successful clocking and the existing count from the service
-                RingSound?.Play();
-                await Task.Delay(1000);// Stop the sound after 1 second
+                CurrentBadgeOwner = result.Message;
+                IsSuccessful = false;
+                RingSoundFailed?.Play();
+                await Task.Delay(TimeSpan.FromSeconds(2));// Stop the sound after 1 second
                 RingSoundFailed?.Stop();
+                CurrentBadgeOwner = "Waiting for tag...";
             }
             else
             {
-                //await AppShell.Current.DisplayAlert("NFC", result.Message, "OK");
-                IsSuccessful = false;
-                RingSoundFailed?.Play();
-                await Task.Delay(1000);// Stop the sound after 1 second
+                CurrentBadgeOwner = result.Message;
+                IsSuccessful = true;
+                ClockingsCount++;// Increment the count of clockings based on the successful clocking and the existing count from the service
+                RingSound?.Play();
+                await Task.Delay(TimeSpan.FromSeconds(2));// Stop the sound after 1 second
                 RingSound?.Stop();
+                CurrentBadgeOwner = "Waiting for tag...";
             }
         }
 

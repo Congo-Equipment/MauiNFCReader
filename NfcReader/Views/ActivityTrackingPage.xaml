@@ -7,12 +7,23 @@
     <ContentPage.Resources>
         <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
     </ContentPage.Resources>
-    <Grid RowDefinitions="*,3*,*">
+    <Grid RowDefinitions="*,Auto,*">
+        <Label
+            Text="{Binding CurrentBadgeOwner,Mode=TwoWay}"
+            FontSize="18"
+            TextColor="Black"
+            FontAttributes="Bold"
+            HorizontalOptions="Center"
+            FontAutoScalingEnabled="True"
+            VerticalOptions="End"
+            Margin="0,80,0,10" HorizontalTextAlignment="Center"
+            Padding="20,0,20,0"/>
+
         <!-- Centered circular border -->
         <Border
             Grid.Row="1"
             Stroke="{Binding IsSuccessful, Converter={StaticResource BoolToColorConverter}}"
-            StrokeThickness="4"
+            StrokeThickness="1"
             Background="WhiteSmoke"
             HorizontalOptions="Center"
             VerticalOptions="Center"
