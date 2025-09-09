@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NfcReader.Utils.Styles.ButtonGlobalStyles">
+
+    <!-- Color Resources -->
+    <Color x:Key="PrimaryColor">#FEB910</Color>
+    <Color x:Key="PrimaryDarkColor">#CC9100</Color>
+    <Color x:Key="DefaultColor">#F0F0F0</Color>
+    <Color x:Key="DefaultTextColor">#333333</Color>
+    <Color x:Key="ErrorColor">#DC3545</Color>
+    <Color x:Key="AccentColor">#008ACC</Color>
+
+    <!-- Primary Button Style -->
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="TextColor" Value="Black" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="BorderColor" Value="{StaticResource PrimaryColor}" />
+    </Style>
+
+    <!-- Error Button Style -->
+    <Style x:Key="ErrorButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ErrorColor}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="BorderColor" Value="{StaticResource ErrorColor}" />
+    </Style>
+
+    <!-- Default Button Style -->
+    <Style x:Key="DefaultButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DefaultColor}" />
+        <Setter Property="TextColor" Value="{StaticResource DefaultTextColor}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="FontAttributes" Value="None" />
+        <Setter Property="BorderColor" Value="#CCCCCC" />
+    </Style>
+
+    <!-- Accent Button Style -->
+    <Style x:Key="AccentButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource AccentColor}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="BorderColor" Value="{StaticResource AccentColor}" />
+    </Style>
+
+    <!-- Danger Button Style -->
+    <Style x:Key="DangerButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="#B00020" />
+        <!-- Darker red than Error -->
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="BorderColor" Value="#B00020" />
+    </Style>
+
+
+</ResourceDictionary>

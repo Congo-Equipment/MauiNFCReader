@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:NfcReader"
              xmlns:mds="clr-namespace:Material.Components.Maui.Styles;assembly=Material.Components.Maui"
+             xmlns:btnStyles="clr-namespace:NfcReader.Utils.Styles;assembly=NfcReader"
              x:Class="NfcReader.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -14,6 +15,9 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
                 <mds:MaterialStyles />
+
+                <ResourceDictionary Source="Utils/Styles/ButtonGlobalStyles.xaml" />
+                <ResourceDictionary Source="Utils/Styles/LabelStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

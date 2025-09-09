@@ -1,4 +1,5 @@
 ﻿using AsyncAwaitBestPractices;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NfcReader.Models;
@@ -33,7 +34,8 @@ namespace NfcReader.ViewModels
             }
             catch (Exception ex)
             {
-                await AppShell.Current.DisplayAlert("NFC", ex.Message, "OK");
+                IsBusy = false;
+                await AppShell.Current.DisplaySnackbar(ex.Message ?? "Failed", duration: TimeSpan.FromSeconds(3), visualOptions: Utils.Constants.SnackbarFailedStyle);
             }
         }
 

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="NfcReader.Views.ClockingsPage"
-             Title="Clockings">
+<ContentPage
+    x:Class="NfcReader.Views.ClockingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:styles="clr-namespace:NfcReader.Utils.Styles;assembly=NfcReader"
+    Title="Clockings">
     <Grid>
-        <RefreshView IsRefreshing="{Binding IsBusy,Mode=TwoWay}" Command="{Binding RefreshCommand}">
-            <CollectionView ItemsSource="{Binding Clockings}">
+        <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+            <!--<CollectionView ItemsSource="{Binding Clockings}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Border StrokeThickness="0" BackgroundColor="WhiteSmoke" Margin="10,5,10,0" StrokeShape="RoundRectangle 10">
@@ -20,7 +22,52 @@
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
+            </CollectionView>-->
+            <CollectionView
+                Margin="10"
+                ItemsSource="{Binding Clockings}"
+                SelectionMode="None"
+                VerticalOptions="FillAndExpand">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            Margin="10,5,10,0"
+                            BackgroundColor="#F5F5F5"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="0">
+
+                            <Grid Padding="12">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontAutoScalingEnabled="True"
+                                        FontSize="16"
+                                        Style="{StaticResource SubHeadline}"
+                                        Text="{Binding StaffId}"
+                                        TextColor="#222222" />
+
+                                    <Label
+                                        FontAutoScalingEnabled="True"
+                                        FontSize="14"
+                                        Style="{StaticResource SubtitleTextStyle}"
+                                        Text="{Binding BadgeId}"
+                                        TextColor="#555555" />
+                                </VerticalStackLayout>
+
+                                <Label
+                                    Margin="0,5,0,0"
+                                    FontSize="12"
+                                    HorizontalOptions="End"
+                                    Text="{Binding Created, StringFormat='{0:dd/MM/yyyy HH:mm}'}"
+                                    TextColor="#888888"
+                                    VerticalOptions="End" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
             </CollectionView>
+
         </RefreshView>
     </Grid>
 </ContentPage>

@@ -88,7 +88,7 @@ namespace NfcReader.Services
                 if (response.IsSuccessStatusCode)
                 {
                     // If the API call was successful, delete the local recording
-                    Debug.Print($"API call failed: {response.ReasonPhrase}");
+                    Debug.Print($"API call succeeded: {response.ReasonPhrase}");
                 }
                 else
                 {
@@ -191,6 +191,7 @@ namespace NfcReader.Services
                     };
                 }
 
+
                 var get = await recordings
                     .Query()
                     .Where(x => x.BadgeId == clocking.BadgeId)
@@ -200,7 +201,7 @@ namespace NfcReader.Services
                 if (get is null) return new Response<string>
                 {
                     Success = false,
-                    Message = "Does not exist"
+                    Message = "Does not exist or Not Recorded"
                 };
 
                 clocking.StaffId = get?.StaffId;
@@ -232,10 +233,11 @@ namespace NfcReader.Services
             }
             catch (Exception ex)
             {
+                Debug.Print($"Error saving and syncing clocking: {ex.Message}");
                 return new Response<string>
                 {
                     Success = false,
-                    Message = ex.Message
+                    Message = "Error saving and syncing clocking "
                 };
             }
         }
@@ -311,6 +313,27 @@ namespace NfcReader.Services
                 };
             }
 
+        }
+
+        public async ValueTask<int> GetTodayClockingCount()
+        {
+            try
+            {
+                using var db = new LiteDatabaseAsync($"Filename={Constants.DB_PATH};Connection=shared");
+                var collection = db.GetCollection<RawClocking>(nameof(RawClocking));
+                var today = DateTime.Now.Date;
+                var count = await collection
+                    .Query()
+                    .Where(x => x.Created.Date == today)
+                    .CountAsync();
+                return count;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error getting today's clocking count: {ex.Message}");
+                Debug.WriteLine(ex.StackTrace);
+                return 0;
+            }
         }
     }
 }

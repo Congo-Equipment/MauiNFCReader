@@ -10,6 +10,11 @@
 
     <ShellContent
         Title="Home"
+        ContentTemplate="{DataTemplate views:ActivityTrackingPage}"
+        Route="Home" />
+
+    <ShellContent
+        Title="Users"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 
