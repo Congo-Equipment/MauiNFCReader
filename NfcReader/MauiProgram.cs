@@ -1,4 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Maui;
+using Material.Components.Maui.Extensions;
+using Microsoft.Extensions.Logging;
+using NfcReader.Services;
+using NfcReader.Services.Interfaces;
+using NfcReader.Utils;
+using NfcReader.ViewModels;
+using NfcReader.Views;
+using Refit;
+using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace NfcReader
 {
@@ -9,6 +18,9 @@ namespace NfcReader
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
+                .UseMaterialComponents()
+                .ConfigureSyncfusionToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -16,8 +28,29 @@ namespace NfcReader
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
+
+            builder.Services.AddScoped<MainPage>();
+            builder.Services.AddTransient<MainViewModel>();
+
+            builder.Services.AddTransient<ClockingsPage>();
+            builder.Services.AddTransient<ClockingPageViewModel>();
+
+            builder.Services.AddTransient<SettingsPage>();
+            builder.Services.AddTransient<SettingsPageViewModel>();
+
+            /* service registration */
+            builder.Services.AddTransient<IRegistrationService, RegistrationService>();
+            builder.Services.AddTransient<ICustomApi, CustomApi>();
+
+            /* api service*/
+            builder.Services.AddRefitClient<IApiService>()
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(Constants.BASE_API))
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+                });
 
             return builder.Build();
         }

@@ -1,0 +1,6 @@
+@NfcReader.Backend_HostAddress = http://localhost:5166
+
+GET {{NfcReader.Backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

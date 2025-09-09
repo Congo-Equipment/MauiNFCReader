@@ -4,11 +4,24 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:NfcReader"
-    Title="NfcReader">
+    xmlns:views="clr-namespace:NfcReader.Views"
+     xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.Material"
+    Title="CE Clocking">
 
     <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
+
+    <ShellContent
+        Title="Clockings"
+        ContentTemplate="{DataTemplate views:ClockingsPage}"
+        Route="ClockingsPage" />
+
+    <ShellContent
+        Title="Settings"
+        Icon="{Static icon:Material.Refresh}"
+        ContentTemplate="{DataTemplate views:SettingsPage}"
+        Route="SettingsPage" />
 
 </Shell>
