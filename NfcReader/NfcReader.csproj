@@ -82,6 +82,16 @@
 		<PackageReference Include="IconPacks.Material" Version="1.0.8940.2-build" />
 		<PackageReference Include="LiteDB.Async" Version="0.1.8" />
 		<PackageReference Include="Material.Components.Maui" Version="0.2.2-preview" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
 		<PackageReference Include="Plugin.MAUI.NFC" Version="0.1.27" />
@@ -105,6 +115,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ClockingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\MeetingActivity.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SettingsPage.xaml">

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Material.Components.Maui.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NfcReader.Services;
 using NfcReader.Services.Interfaces;
@@ -54,6 +55,15 @@ namespace NfcReader
                 {
                     ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
                 });
+
+            var folder = Environment.SpecialFolder.LocalApplicationData;
+            var path = Path.Combine(Environment.GetFolderPath(folder), "nfc_reader.db");
+            builder.Services.AddDbContextFactory<Contexts.ApplicationDbContext>(options =>
+            {
+                options.UseSqlite($"Filename={path}");
+            });
+
+            builder.Services.AddTransient<IClockingService, ClockingService>();
 
             return builder.Build();
         }
