@@ -1,6 +1,7 @@
 ﻿using Android.Media;
 using AsyncAwaitBestPractices;
 using CommunityToolkit.Mvvm.ComponentModel;
+using NfcReader.Models;
 using NfcReader.Services.Interfaces;
 using NfcReader.Shared;
 using Plugin.NFC;
@@ -16,6 +17,18 @@ namespace NfcReader.ViewModels
 
         [ObservableProperty]
         private bool? isSuccessful;
+
+        [ObservableProperty]
+        private Employee? currentEmployee;
+
+        [ObservableProperty]
+        private string currentEmployeeName = "Waiting for badge...";
+
+        [ObservableProperty]
+        private string statusMessage = "Ready to scan";
+
+        [ObservableProperty]
+        private bool isProcessing = false;
 
         [ObservableProperty]
         private Ringtone? _ringSound;
@@ -40,12 +53,14 @@ namespace NfcReader.ViewModels
         {
             try
             {
+                // Load initial clockings count
+                await LoadTodayClockingsCount();
+
                 CrossNFC.Legacy = false;
                 if (CrossNFC.Current.IsEnabled)
                 {
                     await AutoStartAsync();
                     CurrentBadgeOwner = "Waiting for tag...";
-                    // Load initial clockings count if needed
 
                     var instance = Platform.CurrentActivity;
                     Android.Net.Uri uri = RingtoneManager.GetDefaultUri(RingtoneType.Notification);
@@ -61,7 +76,19 @@ namespace NfcReader.ViewModels
             }
             catch (Exception ex)
             {
-                // Handle exceptions
+                StatusMessage = "Error initializing NFC";
+            }
+        }
+
+        private async Task LoadTodayClockingsCount()
+        {
+            try
+            {
+                ClockingsCount = await _clockingService.TodayClockingAsync();
+            }
+            catch (Exception ex)
+            {
+                ClockingsCount = 0;
             }
         }
 
@@ -92,7 +119,11 @@ namespace NfcReader.ViewModels
         {
             if (tagInfo == null)
             {
-                AppShell.Current.DisplayAlert("NFC", "No tag found", "OK");
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    StatusMessage = "No tag found";
+                    IsSuccessful = false;
+                });
                 return;
             }
 
@@ -105,11 +136,14 @@ namespace NfcReader.ViewModels
             {
                 NfcBadgeTagInfo = serialNumber;
                 PunchAsync(serialNumber).SafeFireAndForget();
-
             }
             else if (tagInfo.IsEmpty)
             {
-                Shell.Current.DisplayAlert("NFC", "Empty tag", "OK");
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    StatusMessage = "Empty tag";
+                    IsSuccessful = false;
+                });
             }
             else
             {
@@ -122,26 +156,91 @@ namespace NfcReader.ViewModels
         {
             try
             {
-                var hasClockedIn = await _clockingService.HasClockedInAsync(serialNumber, cancellationToken);
-                if (hasClockedIn)
+                MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    await Shell.Current.DisplayAlert("NFC", "You have already clocked in.", "OK");
+                    IsProcessing = true;
+                    StatusMessage = "Processing...";
+                    IsSuccessful = null;
+                });
+
+                // Get employee information
+                var employeeResponse = await _clockingService.GetOrFetchEmployeeInfoAsync(serialNumber, cancellationToken);
+                if (!employeeResponse.Success || employeeResponse.Data == null)
+                {
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        CurrentEmployeeName = "Unknown Employee";
+                        StatusMessage = "Employee not found";
+                        IsSuccessful = false;
+                        IsProcessing = false;
+                        RingSoundFailed?.Play();
+                    });
+
+                    await Task.Delay(600);
+
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        CurrentEmployeeName = "Unknown Employee";
+                        StatusMessage = "Employee not found";
+                    });
+
                     return;
                 }
 
-                var response = await _clockingService.SaveClockingAsync(serialNumber, "", cancellationToken);
-                if (response.Success)
+                CurrentEmployee = employeeResponse.Data;
+                var fullName = $"{employeeResponse.Data.Name} {employeeResponse.Data.Surname}".Trim();
+
+                var hasClockedIn = await _clockingService.HasClockedInAsync(serialNumber, cancellationToken);
+                if (hasClockedIn)
                 {
-                    await Shell.Current.DisplayAlert("NFC", "Clocking successful.", "OK");
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        CurrentEmployeeName = fullName;
+                        StatusMessage = "Already clocked in today";
+                        IsSuccessful = false;
+                        IsProcessing = false;
+                        RingSoundFailed?.Play();
+                    });
+                    return;
                 }
-                else
+
+                var response = await _clockingService.SaveClockingAsync(serialNumber, employeeResponse.Data.StaffId ?? "", cancellationToken);
+                
+                MainThread.BeginInvokeOnMainThread(async () =>
                 {
-                    await Shell.Current.DisplayAlert("NFC", response.Message, "OK");
-                }
+                    CurrentEmployeeName = fullName;
+                    IsProcessing = false;
+                    
+                    if (response.Success)
+                    {
+                        StatusMessage = "Clocking successful!";
+                        IsSuccessful = true;
+                        ClockingsCount++;
+                        RingSound?.Play();
+                        
+                        // Auto-reset visual confirmation after 3 seconds
+                        await Task.Delay(3000);
+                        StatusMessage = "Ready to scan";
+                        CurrentEmployeeName = "Waiting for badge...";
+                        IsSuccessful = null;
+                    }
+                    else
+                    {
+                        StatusMessage = response.Message ?? "Clocking failed";
+                        IsSuccessful = false;
+                        RingSoundFailed?.Play();
+                    }
+                });
             }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlert("NFC", ex.Message, "OK");
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    StatusMessage = "Error processing clocking";
+                    IsSuccessful = false;
+                    IsProcessing = false;
+                    RingSoundFailed?.Play();
+                });
             }
         }
     }

@@ -19,6 +19,12 @@
         Route="MainPage" />
 
     <ShellContent
+        Title="Meeting Clocking"
+        Icon="{Static icon:Material.EventNote}"
+        ContentTemplate="{DataTemplate views:MeetingActivity}"
+        Route="MeetingActivity" />
+
+    <ShellContent
         Title="Clockings"
         ContentTemplate="{DataTemplate views:ClockingsPage}"
         Route="ClockingsPage" />

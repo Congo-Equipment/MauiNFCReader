@@ -1,21 +1,15 @@
 ﻿using Android.Media;
 using AsyncAwaitBestPractices;
 using CommunityToolkit.Mvvm.ComponentModel;
-using NfcReader.Models;
 using NfcReader.Services.Interfaces;
 using Plugin.NFC;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NfcReader.ViewModels
 {
     public partial class ActivityTrackingPageViewModel : ViewModeBase
     {
-        private readonly IRegistrationService _registrationService;
+        private readonly IClockingService _clocking;
 
         [ObservableProperty]
         private int clockingsCount;
@@ -35,9 +29,9 @@ namespace NfcReader.ViewModels
         [ObservableProperty]
         private string? _currentBadgeOwner;
 
-        public ActivityTrackingPageViewModel(IRegistrationService registrationService)
+        public ActivityTrackingPageViewModel(IClockingService clocking)
         {
-            _registrationService = registrationService;
+            _clocking = clocking;
 
             // Initialize NFC
             Initialize().SafeFireAndForget();
@@ -57,7 +51,7 @@ namespace NfcReader.ViewModels
 
                     CurrentBadgeOwner = "Waiting for tag...";
 
-                    ClockingsCount = await _registrationService.GetTodayClockingCount();
+                    ClockingsCount = await _clocking.TodayClockingAsync();
 
                     var instance = Platform.CurrentActivity;
                     Android.Net.Uri uri = RingtoneManager.GetDefaultUri(RingtoneType.Notification);
@@ -138,11 +132,14 @@ namespace NfcReader.ViewModels
                 await AppShell.Current.DisplayAlert("NFC", "Empty tag", "OK");
             }
 
-            var result = await _registrationService.SaveAndSync(new RawClocking
+            var employeeInfo = await _clocking.GetOrFetchEmployeeInfoAsync(badgeId);
+            if (!employeeInfo.Success)
             {
-                BadgeId = badgeId,
-                ClockingTime = DateTime.Now,
-            });
+                await AppShell.Current.DisplayAlert("NFC", employeeInfo.Message, "OK");
+                return;
+            }
+
+            var result = await _clocking.SaveClockingAsync(badgeId,employeeInfo?.Data?.StaffId);
 
             if (!result.Success)
             {

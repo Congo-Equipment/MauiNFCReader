@@ -44,6 +44,9 @@ namespace NfcReader
             builder.Services.AddTransient<ActivityTrackingPage>();
             builder.Services.AddTransient<ActivityTrackingPageViewModel>();
 
+            builder.Services.AddTransient<MeetingActivity>();
+            builder.Services.AddTransient<MeetingActivityViewModel>();
+
             /* service registration */
             builder.Services.AddTransient<IRegistrationService, RegistrationService>();
             builder.Services.AddTransient<ICustomApi, CustomApi>();

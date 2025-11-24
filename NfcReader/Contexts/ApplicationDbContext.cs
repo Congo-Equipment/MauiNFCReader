@@ -3,7 +3,7 @@ using NfcReader.Models;
 
 namespace NfcReader.Contexts
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
         public DbSet<Clocking> Clockings { get; set; }
         public DbSet<Employee> Employees { get; set; }
@@ -29,6 +29,7 @@ namespace NfcReader.Contexts
             modelBuilder.Entity<Employee>(employee =>
             {
                 employee.HasKey(x => x.Id);
+                employee.HasIndex(x => x.badgeId).IsUnique();
             });
 
             base.OnModelCreating(modelBuilder);

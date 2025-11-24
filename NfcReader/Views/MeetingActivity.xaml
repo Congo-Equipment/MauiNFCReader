@@ -1,12 +1,198 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="NfcReader.Views.MeetingActivity"
-             Title="MeetingActivity">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+<ContentPage
+    x:Class="NfcReader.Views.MeetingActivity"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Meeting Clocking">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!--  Styles for Border elements using theme colors  -->
+            <Style x:Key="SuccessStyle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource Success}" />
+                <Setter Property="Stroke" Value="{StaticResource SuccessDark}" />
+            </Style>
+            <Style x:Key="ErrorStyle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource Error}" />
+                <Setter Property="Stroke" Value="{StaticResource ErrorDark}" />
+            </Style>
+            <Style x:Key="InfoStyle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource Info}" />
+                <Setter Property="Stroke" Value="{StaticResource InfoDark}" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  Header with count using theme colors  -->
+        <Border
+            Grid.Row="0"
+            Margin="0,0,0,10"
+            Padding="20"
+            BackgroundColor="{StaticResource Warning}"
+            StrokeThickness="0">
+            <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
+                <Label
+                    FontSize="18"
+                    Text="Today's Count:"
+                    TextColor="{StaticResource White}"
+                    VerticalOptions="Center" />
+                <Label
+                    Margin="10,0,0,0"
+                    FontAttributes="Bold"
+                    FontSize="24"
+                    Text="{Binding ClockingsCount}"
+                    TextColor="{StaticResource White}"
+                    VerticalOptions="Center" />
+            </StackLayout>
+        </Border>
+
+        <!--  Main content area  -->
+        <StackLayout
+            Grid.Row="1"
+            Padding="20"
+            Spacing="30"
+            VerticalOptions="Center">
+
+            <!--  Status indicator with visual confirmation using theme colors  -->
+            <Border
+                x:Name="StatusBorder"
+                Padding="20"
+                HorizontalOptions="Center"
+                StrokeShape="RoundRectangle 15"
+                StrokeThickness="2"
+                WidthRequest="300">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="BackgroundColor" Value="{StaticResource Info}" />
+                        <Setter Property="Stroke" Value="{StaticResource InfoDark}" />
+                        <Style.Triggers>
+                            <DataTrigger
+                                Binding="{Binding IsSuccessful}"
+                                TargetType="Border"
+                                Value="True">
+                                <Setter Property="BackgroundColor" Value="{StaticResource Success}" />
+                                <Setter Property="Stroke" Value="{StaticResource SuccessDark}" />
+                            </DataTrigger>
+                            <DataTrigger
+                                Binding="{Binding IsSuccessful}"
+                                TargetType="Border"
+                                Value="False">
+                                <Setter Property="BackgroundColor" Value="{StaticResource Error}" />
+                                <Setter Property="Stroke" Value="{StaticResource ErrorDark}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+
+                <StackLayout Spacing="10">
+                    <!--  Status icon  -->
+                    <Label
+                        x:Name="StatusIcon"
+                        FontSize="48"
+                        HorizontalOptions="Center"
+                        TextColor="{StaticResource White}">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Setter Property="Text" Value="📱" />
+                                <Style.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding IsSuccessful}"
+                                        TargetType="Label"
+                                        Value="True">
+                                        <Setter Property="Text" Value="✅" />
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        Binding="{Binding IsSuccessful}"
+                                        TargetType="Label"
+                                        Value="False">
+                                        <Setter Property="Text" Value="❌" />
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        Binding="{Binding IsProcessing}"
+                                        TargetType="Label"
+                                        Value="True">
+                                        <Setter Property="Text" Value="⏳" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
+
+                    <!--  Status message  -->
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding StatusMessage}"
+                        TextColor="{StaticResource White}" />
+                </StackLayout>
+            </Border>
+
+            <!--  Employee name display using theme colors  -->
+            <Border
+                Padding="20"
+                BackgroundColor="{StaticResource White}"
+                HorizontalOptions="Center"
+                Stroke="{StaticResource Gray300}"
+                StrokeShape="RoundRectangle 10"
+                StrokeThickness="1"
+                WidthRequest="300">
+                <StackLayout Spacing="5">
+                    <Label
+                        FontSize="14"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        Text="Employee"
+                        TextColor="{StaticResource Gray500}" />
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding CurrentEmployeeName}"
+                        TextColor="{StaticResource Gray900}" />
+                </StackLayout>
+            </Border>
+
+            <!--  Processing indicator using theme colors  -->
+            <ActivityIndicator
+                HeightRequest="40"
+                HorizontalOptions="Center"
+                IsRunning="{Binding IsProcessing}"
+                IsVisible="{Binding IsProcessing}"
+                WidthRequest="40"
+                Color="{StaticResource Secondary}" />
+
+            <!--  Instructions using theme colors  -->
+            <Label
+                Margin="0,20,0,0"
+                FontSize="14"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="Hold your badge near the device to clock in"
+                TextColor="{StaticResource Gray500}" />
+
+        </StackLayout>
+
+        <!--  Footer information using theme colors  -->
+        <StackLayout
+            Grid.Row="2"
+            Padding="20"
+            BackgroundColor="{StaticResource Gray100}">
+            <Label
+                x:Name="DateLabel"
+                FontSize="12"
+                HorizontalOptions="Center"
+                TextColor="{StaticResource Gray500}" />
+        </StackLayout>
+
+    </Grid>
 </ContentPage>
