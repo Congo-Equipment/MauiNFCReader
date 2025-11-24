@@ -19,13 +19,13 @@ namespace NfcReader.Backend.Models
 
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+            builder.Property(x => x.Id).HasColumnName("OID").ValueGeneratedOnAdd();
 
-            builder.Property(x => x.BadgeId).IsRequired();
+            builder.Property(x => x.BadgeId).HasColumnName("BADGE_ID").IsRequired();
 
-            builder.Property(x => x.Created).IsRequired();
+            builder.Property(x => x.Created).HasColumnName("CREATED").IsRequired();
 
-            builder.Property(x => x.StaffId).IsRequired();
+            builder.Property(x => x.StaffId).HasColumnName("STAFF_ID").IsRequired();
         }
     }
 }
