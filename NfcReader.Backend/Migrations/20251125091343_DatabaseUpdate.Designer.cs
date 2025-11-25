@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NfcReader.Backend.Contexts;
 
@@ -11,9 +12,11 @@ using NfcReader.Backend.Contexts;
 namespace NfcReader.Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251125091343_DatabaseUpdate")]
+    partial class DatabaseUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,7 +114,9 @@ namespace NfcReader.Backend.Migrations
                         .HasColumnName("DATE_HEURE_POINTAGE");
 
                     b.Property<Guid?>("ClockingTypeId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
+                        .HasDefaultValue(new Guid("00000000-0000-0000-0000-000000000000"))
                         .HasColumnName("OID_TYPE_POINTAGE");
 
                     b.Property<DateTime>("Created")

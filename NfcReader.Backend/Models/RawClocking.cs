@@ -8,7 +8,7 @@ namespace NfcReader.Backend.Models
         public Guid Id { get; set; } = Guid.CreateVersion7();
         public string? BadgeId { get; set; }
         public string? StaffId { get; set; }
-        public Guid ClockingTypeId { get; set; }
+        public Guid? ClockingTypeId { get; set; }
         public DateTime ClockingTime { get; set; }
         public DateTime Created { get; set; } = DateTime.UtcNow;
     }
@@ -27,13 +27,13 @@ namespace NfcReader.Backend.Models
             builder.Property(x => x.StaffId).HasColumnName("OID_EMPLOYE").HasMaxLength(50);
             builder.Property(x => x.ClockingTime).HasColumnName("DATE_HEURE_POINTAGE").HasMaxLength(50);
             builder.Property(x => x.Created).HasColumnName("CREATED").HasMaxLength(50);
-            builder.Property(x => x.ClockingTypeId).HasColumnName("OID_TYPE_POINTAGE");
+            builder.Property(x => x.ClockingTypeId).HasColumnName("OID_TYPE_POINTAGE").HasDefaultValue(null);
 
             builder.HasOne<ClockingType>()
                 .WithMany(x => x.RawClockings)
                 .HasForeignKey(x => x.ClockingTypeId)
                 .HasConstraintName("FK_RawClocking_ClockingType")
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

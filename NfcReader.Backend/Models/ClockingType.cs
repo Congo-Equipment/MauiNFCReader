@@ -30,7 +30,7 @@ namespace NfcReader.Backend.Models
             builder.HasIndex(x => x.Name).IsUnique();
 
             builder.Property(x => x.Id)
-                .HasColumnName("OID")
+                .HasColumnName("OID_TYPE")
                 .ValueGeneratedOnAdd();
 
             builder.Property(x => x.Name)

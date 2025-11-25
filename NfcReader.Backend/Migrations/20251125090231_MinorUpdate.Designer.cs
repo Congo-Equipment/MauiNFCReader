@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NfcReader.Backend.Contexts;
 
@@ -11,9 +12,11 @@ using NfcReader.Backend.Contexts;
 namespace NfcReader.Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251125090231_MinorUpdate")]
+    partial class MinorUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,7 +30,7 @@ namespace NfcReader.Backend.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("OID_TYPE");
+                        .HasColumnName("OID");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2")
@@ -110,7 +113,7 @@ namespace NfcReader.Backend.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("DATE_HEURE_POINTAGE");
 
-                    b.Property<Guid?>("ClockingTypeId")
+                    b.Property<Guid>("ClockingTypeId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("OID_TYPE_POINTAGE");
 
@@ -163,6 +166,7 @@ namespace NfcReader.Backend.Migrations
                         .WithMany("RawClockings")
                         .HasForeignKey("ClockingTypeId")
                         .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
                         .HasConstraintName("FK_RawClocking_ClockingType");
                 });
 
