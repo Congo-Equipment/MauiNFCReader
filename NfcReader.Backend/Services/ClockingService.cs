@@ -187,7 +187,7 @@ namespace NfcReader.Backend.Services
 
         public async IAsyncEnumerable<Recording> Recordings()
         {
-            await foreach (var record in dbContext.Recordings.AsAsyncEnumerable())
+            await foreach (var record in dbContext.Recordings.OrderByDescending(x => x.Created).AsAsyncEnumerable())
             {
                 yield return record;
             }
