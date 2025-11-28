@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NfcReader.Backend.DTOs;
 using NfcReader.Backend.Models;
 using NfcReader.Backend.Services.Interfaces;
 
@@ -40,6 +41,15 @@ namespace NfcReader.Backend.Controllers
         public async IAsyncEnumerable<Recording> GetRecordings()
         {
             await foreach (var item in clockingService.Recordings())
+            {
+                yield return item;
+            }
+        }
+
+        [HttpGet("clocking-types")]
+        public async IAsyncEnumerable<ClockingTypeDTO> GetClockingTypes()
+        {
+            await foreach (var item in clockingService.RawClockings())
             {
                 yield return item;
             }

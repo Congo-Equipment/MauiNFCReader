@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NfcReader.Backend.Contexts;
+using NfcReader.Backend.DTOs;
 using NfcReader.Backend.Models;
 using NfcReader.Backend.Services.Interfaces;
 using NfcReader.Shared;
@@ -190,6 +191,25 @@ namespace NfcReader.Backend.Services
             await foreach (var record in dbContext.Recordings.OrderByDescending(x => x.Created).AsAsyncEnumerable())
             {
                 yield return record;
+            }
+        }
+
+        /// <summary>
+        /// Return list of clocking types
+        /// </summary>
+        /// <returns></returns>
+        public async IAsyncEnumerable<ClockingTypeDTO> RawClockings()
+        {
+            await foreach (var type in dbContext.ClockingTypes.OrderByDescending(x => x.Created).AsAsyncEnumerable())
+            {
+                yield return new ClockingTypeDTO
+                {
+                    Id = type.Id,
+                    Name = type.Name,
+                    Description = type.Description,
+                    Created = type.Created,
+                    Updated = type.Updated
+                };
             }
         }
     }
