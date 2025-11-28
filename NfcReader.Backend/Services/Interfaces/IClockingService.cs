@@ -6,6 +6,8 @@ namespace NfcReader.Backend.Services.Interfaces
 {
     public interface IClockingService
     {
+        Task AddTypeAsync(AddTypeDTO type);
+        Task<bool> DeleteTypeAsync(Guid id);
         ValueTask<Response<Employee>> GetInfoFromBadgeAsync(string badgeId);
         ValueTask<Response<Employee>> GetInfoFromStaffIdAsync(string staffId);
         IAsyncEnumerable<ClockingTypeDTO> RawClockings();

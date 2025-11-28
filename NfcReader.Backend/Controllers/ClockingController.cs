@@ -54,5 +54,22 @@ namespace NfcReader.Backend.Controllers
                 yield return item;
             }
         }
+
+        [HttpPost("add-clock-type")]
+        public async Task<IActionResult> AddClockingTypeAsync([FromBody] AddTypeDTO clockingType)
+        {
+            await clockingService.AddTypeAsync(clockingType);
+            return Ok(new { Success = true, Message = "Clocking type added successfully." });
+        }
+
+        [HttpDelete("delete-clock-type/{id}")]
+        public async Task<IActionResult> DeleteClockingTypeAsync(Guid id)
+        {
+            var success = await clockingService.DeleteTypeAsync(id);
+            if (success)
+                return Ok(new { Success = true, Message = "Clocking type deleted successfully." });
+
+            return BadRequest(new { Success = false, Message = "Failed to delete clocking type." });
+        }
     }
 }

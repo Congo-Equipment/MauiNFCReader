@@ -212,5 +212,25 @@ namespace NfcReader.Backend.Services
                 };
             }
         }
+
+        public async Task AddTypeAsync(AddTypeDTO type)
+        {
+            var clockingType = new ClockingType
+            {
+                Name = type.Name,
+                Description = type.Description,
+                Created = DateTime.UtcNow
+            };
+            await dbContext.ClockingTypes.AddAsync(clockingType);
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> DeleteTypeAsync(Guid id)
+        {
+            var deleted = await dbContext.ClockingTypes.Where(x => x.Id == id)
+                .ExecuteDeleteAsync();
+
+            return deleted > 0;
+        }
     }
 }
