@@ -3,14 +3,14 @@
     x:Class="NfcReader.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.Material"
     xmlns:local="clr-namespace:NfcReader"
     xmlns:views="clr-namespace:NfcReader.Views"
-     xmlns:icon="clr-namespace:IconPacks.IconKind;assembly=IconPacks.Material"
     Title="CE Clocking">
 
     <ShellContent
         Title="Home"
-        ContentTemplate="{DataTemplate views:ActivityTrackingPage}"
+        ContentTemplate="{DataTemplate views:ActivityMenuPage}"
         Route="Home" />
 
     <ShellContent
@@ -18,11 +18,11 @@
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 
-    <ShellContent
+    <!--<ShellContent
         Title="Meeting Clocking"
         Icon="{Static icon:Material.EventNote}"
         ContentTemplate="{DataTemplate views:MeetingActivity}"
-        Route="MeetingActivity" />
+        Route="MeetingActivity" />-->
 
     <ShellContent
         Title="Clockings"
@@ -31,8 +31,8 @@
 
     <ShellContent
         Title="Settings"
-        Icon="{Static icon:Material.Refresh}"
         ContentTemplate="{DataTemplate views:SettingsPage}"
+        Icon="{Static icon:Material.Refresh}"
         Route="SettingsPage" />
 
 </Shell>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="NfcReader.Views.ActivityMenuPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:NfcReader.ViewModels"
+    x:Name="MenuPage"
+    Title="Menu">
+    <Grid RowDefinitions="0.2*,*">
+        <Label
+            HorizontalOptions="Center"
+            Text="Welcome to .NET MAUI!"
+            VerticalOptions="Center" />
+
+        <CollectionView
+            Grid.Row="1"
+            ItemSizingStrategy="MeasureAllItems"
+            ItemsSource="{Binding ClockingTypes}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
+            </CollectionView.ItemsLayout>
+            <!--  CollectionView content goes here  -->
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Button
+                        Margin="20,0"
+                        BindingContext="{Binding Source={x:Reference MenuPage}, Path=BindingContext}"
+                        Command="{Binding SelectOptionCommand}"
+                        CommandParameter="{Binding Id}"
+                        HeightRequest="100"
+                        Text="{Binding Name}" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

@@ -24,5 +24,20 @@ namespace NfcReader.Services
                 yield return item;
             }
         }
+
+        public async IAsyncEnumerable<ClockingType?> GetClockingTypesAsync()
+        {
+            //handler = new HttpClientHandler
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+            };
+            using var client = new HttpClient(handler);
+            client.BaseAddress = new Uri($"{Constants.BASE_API}/clocking/clocking-types");
+            await foreach (var item in client.GetFromJsonAsAsyncEnumerable<ClockingType>(client.BaseAddress))
+            {
+                yield return item;
+            }
+        }
     }
 }
