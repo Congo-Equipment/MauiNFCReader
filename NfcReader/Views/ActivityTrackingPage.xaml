@@ -1,54 +1,59 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:converters="clr-namespace:NfcReader.Converters"
-             x:Class="NfcReader.Views.ActivityTrackingPage"
-             Title="Activity Tracking">
+<ContentPage
+    x:Class="NfcReader.Views.ActivityTrackingPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:NfcReader.Converters"
+    Title="{Binding Title}">
     <ContentPage.Resources>
-        <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
     </ContentPage.Resources>
     <Grid RowDefinitions="*,Auto,*">
         <Label
-            Text="{Binding CurrentBadgeOwner,Mode=TwoWay}"
-            FontSize="18"
-            TextColor="Black"
+            Margin="0,80,0,10"
+            Padding="20,0,20,0"
             FontAttributes="Bold"
-            HorizontalOptions="Center"
             FontAutoScalingEnabled="True"
-            VerticalOptions="End"
-            Margin="0,80,0,10" HorizontalTextAlignment="Center"
-            Padding="20,0,20,0"/>
+            FontSize="18"
+            HorizontalOptions="Center"
+            HorizontalTextAlignment="Center"
+            Text="{Binding CurrentBadgeOwner, Mode=TwoWay}"
+            TextColor="Black"
+            VerticalOptions="End" />
 
-        <!-- Centered circular border -->
+        <!--  Centered circular border  -->
         <Border
             Grid.Row="1"
+            Background="WhiteSmoke"
+            HeightRequest="200"
+            HorizontalOptions="Center"
             Stroke="{Binding IsSuccessful, Converter={StaticResource BoolToColorConverter}}"
             StrokeThickness="1"
-            Background="WhiteSmoke"
-            HorizontalOptions="Center"
             VerticalOptions="Center"
-            WidthRequest="200"
-            HeightRequest="200">
+            WidthRequest="200">
 
             <Border.StrokeShape>
-                <EllipseGeometry Center="100,100" RadiusX="100" RadiusY="100"/>
+                <EllipseGeometry
+                    Center="100,100"
+                    RadiusX="100"
+                    RadiusY="100" />
             </Border.StrokeShape>
 
-            <Grid VerticalOptions="Center" HorizontalOptions="Center">
+            <Grid HorizontalOptions="Center" VerticalOptions="Center">
                 <Label
-                    Text="{Binding ClockingsCount}"
-                    FontSize="48"
                     FontAttributes="Bold"
+                    FontSize="48"
                     HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    TextColor="Gray"/>
-                <Label
-                    Text="Clockings Today"
-                    FontSize="16"
+                    Text="{Binding ClockingsCount}"
                     TextColor="Gray"
+                    VerticalOptions="Center" />
+                <Label
+                    Margin="0,80,0,0"
+                    FontSize="16"
                     HorizontalOptions="Center"
-                    VerticalOptions="End"
-                    Margin="0,80,0,0"/>
+                    Text="Clockings Today"
+                    TextColor="Gray"
+                    VerticalOptions="End" />
             </Grid>
         </Border>
     </Grid>

@@ -1,13 +1,14 @@
 ﻿using Android.Media;
 using AsyncAwaitBestPractices;
 using CommunityToolkit.Mvvm.ComponentModel;
+using NfcReader.Models;
 using NfcReader.Services.Interfaces;
 using Plugin.NFC;
 using System.Diagnostics;
 
 namespace NfcReader.ViewModels
 {
-    public partial class ActivityTrackingPageViewModel : ViewModeBase
+    public partial class ActivityTrackingPageViewModel : ViewModeBase, IQueryAttributable
     {
         private readonly IClockingService _clocking;
 
@@ -29,6 +30,9 @@ namespace NfcReader.ViewModels
         [ObservableProperty]
         private string? _currentBadgeOwner;
 
+
+        public ClockingType? ClockingType { get; private set; }
+
         public ActivityTrackingPageViewModel(IClockingService clocking)
         {
             _clocking = clocking;
@@ -43,6 +47,8 @@ namespace NfcReader.ViewModels
         {
             try
             {
+                //Title = ClockingType == null ? "Activity Tracking" : ClockingType?.Name;
+
                 CrossNFC.Legacy = false;
                 if (CrossNFC.Current.IsEnabled)
                 {
@@ -139,7 +145,7 @@ namespace NfcReader.ViewModels
                 return;
             }
 
-            var result = await _clocking.SaveClockingAsync(badgeId,employeeInfo?.Data?.StaffId);
+            var result = await _clocking.SaveClockingAsync(badgeId, employeeInfo?.Data?.StaffId);
 
             if (!result.Success)
             {
@@ -163,5 +169,16 @@ namespace NfcReader.ViewModels
             }
         }
 
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            var data = query["type"];
+
+            var type = data as ClockingType;
+
+            ClockingType = type;
+            OnPropertyChanged("ClockingType");
+
+            Title = ClockingType == null ? "Activity Tracking" : ClockingType?.Name;
+        }
     }
 }

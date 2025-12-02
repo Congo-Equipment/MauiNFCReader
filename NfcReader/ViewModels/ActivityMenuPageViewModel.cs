@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NfcReader.Models;
 using NfcReader.Services.Interfaces;
+using NfcReader.Views;
 using System.Collections.ObjectModel;
 
 namespace NfcReader.ViewModels;
@@ -70,7 +71,12 @@ public partial class ActivityMenuPageViewModel : ViewModeBase
         if (selectedType is null)
             return;
 
+        var @params = new Dictionary<string, object>()
+        {
+            {"type", selectedType }
+        };
+
         // Navigate to the detail page or perform other actions based on the selected option
-        await Shell.Current.GoToAsync($"ActivityDetailPage?typeId={selectedType.Id}&typeName={selectedType.Name}");
+        await Shell.Current.GoToAsync($"{nameof(ActivityTrackingPage)}", @params);
     }
 }
