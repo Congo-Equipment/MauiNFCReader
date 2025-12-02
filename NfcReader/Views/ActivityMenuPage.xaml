@@ -3,6 +3,7 @@
     x:Class="NfcReader.Views.ActivityMenuPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:NfcReader.ViewModels"
     x:Name="MenuPage"
     Title="Menu">
@@ -13,6 +14,7 @@
             VerticalOptions="Center" />
 
         <CollectionView
+            x:Name="MenulistCol"
             Grid.Row="1"
             ItemSizingStrategy="MeasureAllItems"
             ItemsSource="{Binding ClockingTypes}">
@@ -22,13 +24,31 @@
             <!--  CollectionView content goes here  -->
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Button
+                    <Border
+                        x:Name="cardBorder"
                         Margin="20,0"
-                        BindingContext="{Binding Source={x:Reference MenuPage}, Path=BindingContext}"
-                        Command="{Binding SelectOptionCommand}"
-                        CommandParameter="{Binding Id}"
                         HeightRequest="100"
-                        Text="{Binding Name}" />
+                        Stroke="Wheat">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <Border.Behaviors>
+                            <toolkit:TouchBehavior
+                                Command="{Binding Source={x:Reference MenulistCol}, Path=BindingContext.SelectOptionCommand}"
+                                CommandParameter="{Binding Source={x:Reference cardBorder}, Path=BindingContext}"
+                                DefaultAnimationDuration="250"
+                                DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
+                                PressedOpacity="0.6"
+                                PressedScale="0.95" />
+                        </Border.Behaviors>
+                        <VerticalStackLayout Margin="0,20" Spacing="10">
+                            <Label
+                                FontAttributes="Bold"
+                                HorizontalOptions="Center"
+                                Text="{Binding Name}" />
+                            <Label HorizontalOptions="Center" Text="{Binding Description}" />
+                        </VerticalStackLayout>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

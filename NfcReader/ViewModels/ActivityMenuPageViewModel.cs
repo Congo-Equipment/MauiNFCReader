@@ -65,13 +65,9 @@ public partial class ActivityMenuPageViewModel : ViewModeBase
     }
 
     [RelayCommand]
-    private async Task SelectOption(Guid id)
+    private async Task SelectOption(ClockingType selectedType)
     {
-        if (id == Guid.Empty)
-            return;
-
-        var selectedType = ClockingTypes.FirstOrDefault(ct => ct.Id == id);
-        if (selectedType == null)
+        if (selectedType is null)
             return;
 
         // Navigate to the detail page or perform other actions based on the selected option
