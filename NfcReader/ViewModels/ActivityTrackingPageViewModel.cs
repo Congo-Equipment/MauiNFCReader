@@ -56,8 +56,7 @@ namespace NfcReader.ViewModels
                     await AutoStartAsync();
 
                     CurrentBadgeOwner = "Waiting for tag...";
-
-                    ClockingsCount = await _clocking.TodayClockingAsync();
+                    
 
                     var instance = Platform.CurrentActivity;
                     Android.Net.Uri uri = RingtoneManager.GetDefaultUri(RingtoneType.Notification);
@@ -65,6 +64,8 @@ namespace NfcReader.ViewModels
 
                     Android.Net.Uri uriFailed = RingtoneManager.GetDefaultUri(RingtoneType.Ringtone);
                     RingSoundFailed = RingtoneManager.GetRingtone(instance.ApplicationContext, uriFailed);
+
+                    ClockingsCount = await _clocking.TodayClockingAsync();
                 }
                 else
                 {
