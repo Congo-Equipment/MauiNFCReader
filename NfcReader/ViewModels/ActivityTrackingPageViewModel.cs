@@ -47,8 +47,6 @@ namespace NfcReader.ViewModels
         {
             try
             {
-                //Title = ClockingType == null ? "Activity Tracking" : ClockingType?.Name;
-
                 CrossNFC.Legacy = false;
                 if (CrossNFC.Current.IsEnabled)
                 {

@@ -29,7 +29,7 @@ namespace NfcReader.Utils
             TextColor = Colors.Black
         };
 #if DEBUG
-        public static string BASE_API = "http://10.0.15.57:1010/api";//dev
+        public static string BASE_API = "https://10.15.213.165:45455/api";//dev
         //public static string BASE_API = "http://10.0.15.177:1010/api";//prod
 #elif RELEASE
         public static string BASE_API = "http://10.0.15.177:1010/api";//prod

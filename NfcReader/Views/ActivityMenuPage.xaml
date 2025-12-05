@@ -10,7 +10,7 @@
     <Grid RowDefinitions="0.2*,*">
         <Label
             HorizontalOptions="Center"
-            Text="Welcome to .NET MAUI!"
+            Text="Pick an option to continu!"
             VerticalOptions="Center" />
 
         <CollectionView

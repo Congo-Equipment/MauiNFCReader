@@ -24,6 +24,7 @@ namespace NfcReader.Services
                     };
                 }
 
+
                 var hasPunchedIn = await context
                     .Clockings
                     .AnyAsync(c => c.StaffId == staffId && c.ClockingKind == ClockingKind.Meeting && c.ClockingTime.Date == DateTime.UtcNow.Date);
