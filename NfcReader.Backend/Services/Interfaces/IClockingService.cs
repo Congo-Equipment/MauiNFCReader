@@ -8,7 +8,7 @@ namespace NfcReader.Backend.Services.Interfaces
     {
         Task AddTypeAsync(AddTypeDTO type);
         Task<bool> DeleteTypeAsync(Guid id);
-        ValueTask<Response<Employee>> GetInfoFromBadgeAsync(string badgeId);
+        ValueTask<Response<EmployeeDTO>> GetInfoFromBadgeAsync(string badgeId);
         ValueTask<Response<Employee>> GetInfoFromStaffIdAsync(string staffId);
         IAsyncEnumerable<ClockingTypeDTO> RawClockings();
         IAsyncEnumerable<Recording> Recordings();

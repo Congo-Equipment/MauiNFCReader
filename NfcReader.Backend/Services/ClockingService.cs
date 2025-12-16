@@ -10,29 +10,50 @@ namespace NfcReader.Backend.Services
 {
     internal class ClockingService(ApplicationDbContext dbContext) : IClockingService
     {
-        public async ValueTask<Response<Employee>> GetInfoFromBadgeAsync(string badgeId)
+        public async ValueTask<Response<EmployeeDTO>> GetInfoFromBadgeAsync(string badgeId)
         {
             try
             {
-                var emp = await dbContext.Employees.FirstOrDefaultAsync(x => x.StaffId == badgeId);
+                var badgeInfo = await dbContext.Recordings.FirstOrDefaultAsync(x => x.BadgeId == badgeId);
+                if (badgeInfo is null)
+                {
+                    return new Response<EmployeeDTO>
+                    {
+                        Success = false,
+                        Message = "Badge information not found or registred"
+                    };
+                }
+
+                var emp = await dbContext.Employees.FirstOrDefaultAsync(x => x.StaffId == badgeInfo.StaffId);
                 if (emp is null)
                 {
-                    return new Response<Employee>
+                    return new Response<EmployeeDTO>
                     {
-                        Success = true,
+                        Success = false,
                         Message = "Employee not found or registred with this badge id"
                     };
                 }
 
-                return new Response<Employee>
+                var mapped = new EmployeeDTO
+                {
+                    Id = emp.Id,
+                    Name = emp.Names,
+                    Surname = emp.Surnames,
+                    StaffId = emp.StaffId,
+                    Department = emp.Department,
+                    Position = emp.Position,
+                    badgeId = badgeInfo.BadgeId,
+                };
+
+                return new Response<EmployeeDTO>
                 {
                     Success = true,
-                    Data = emp
+                    Data = mapped
                 };
             }
             catch (Exception ex)
             {
-                return new Response<Employee>
+                return new Response<EmployeeDTO>
                 {
                     Success = false,
                     Message = ex.Message
@@ -168,6 +189,19 @@ namespace NfcReader.Backend.Services
 
                 var employee = hasParsed ? await dbContext.Employees.FirstOrDefaultAsync(x => x.StaffId == toInt.ToString())
                     : await dbContext.Employees.FirstOrDefaultAsync(x => x.StaffId == clocking.StaffId);
+
+                if (employee is null)
+                {
+                    entry.State = EntityState.Deleted;
+
+                    await dbContext.SaveChangesAsync();
+
+                    return new Response<RawClocking>
+                    {
+                        Success = false,
+                        Message = "Employee not found, can't clock today!"
+                    };
+                }
 
                 return new Response<RawClocking>
                 {
