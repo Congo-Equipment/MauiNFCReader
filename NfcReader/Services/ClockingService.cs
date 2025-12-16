@@ -168,7 +168,7 @@ namespace NfcReader.Services
         {
             try
             {
-                var localEmployee = await context.Employees.FirstOrDefaultAsync(e => e.badgeId == badgeId, cancellationToken);
+                var localEmployee = await context.Employees.FirstOrDefaultAsync(e => e.StaffId == badgeId, cancellationToken);
                 if (localEmployee != null)
                 {
                     return new Response<Employee>

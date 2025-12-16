@@ -9,7 +9,7 @@ using SyncResult = NfcReader.Shared.SyncResult;
 
 namespace NfcReader.Services
 {
-    internal class RegistrationService(IApiService apiService) : IRegistrationService
+    internal class RegistrationService(IApiService apiService, ICustomApi customApi) : IRegistrationService
     {
         public async ValueTask<IReadOnlyCollection<Recording>> GetLocalRecordings()
         {
@@ -412,6 +412,75 @@ namespace NfcReader.Services
                 Debug.Print($"Error getting today's clocking count: {ex.Message}");
                 Debug.WriteLine(ex.StackTrace);
                 return 0;
+            }
+        }
+
+        public async ValueTask<int> GetTodayClockingCount(Guid clockingType)
+        {
+            try
+            {
+                using var db = new LiteDatabaseAsync($"Filename={Constants.DB_PATH};Connection=shared");
+                var collection = db.GetCollection<RawClocking>(nameof(RawClocking));
+                var today = DateTime.Now.Date;
+                var count = await collection
+                    .Query()
+                    .Where(x => x.Created.Date == today && x.ClockingTypeId == clockingType)
+                    .CountAsync();
+                return count;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"Error getting today's clocking count: {ex.Message}");
+                Debug.WriteLine(ex.StackTrace);
+                return 0;
+            }
+        }
+
+        public async ValueTask<Response<Employee>> GetOrFetchEmployeeInfoAsync(string badgeId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                using var db = new LiteDatabaseAsync($"Filename={Constants.DB_PATH};Connection=shared");
+                var collection = db.GetCollection<Employee>(nameof(Employee));
+
+                var localEmployee = await collection.Query().Where(e => e.badgeId == badgeId).FirstOrDefaultAsync();
+                if (localEmployee != null)
+                {
+                    return new Response<Employee>
+                    {
+                        Success = true,
+                        Message = "Success",
+                        Data = localEmployee
+                    };
+                }
+
+                var employee = await customApi.GetByIdAsync(badgeId);
+                if (!employee.Success)
+                {
+                    return new Response<Employee>
+                    {
+                        Success = false,
+                        Message = "Employee not found."
+                    };
+                }
+
+                await collection.InsertAsync(employee.Data);
+
+                return new Response<Employee>
+                {
+                    Success = true,
+                    Message = "Success",
+                    Data = employee.Data
+                };
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return new Response<Employee>
+                {
+                    Success = false,
+                    Message = "An Error occured while processing the entry",
+                };
             }
         }
     }

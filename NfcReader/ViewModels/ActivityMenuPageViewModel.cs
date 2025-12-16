@@ -29,26 +29,6 @@ public partial class ActivityMenuPageViewModel : ViewModeBase
         IsBusy = true;
         try
         {
-            //var clockingTypes = await _apiService.GetClockingTypesAsync();
-            //ClockingTypes = new ObservableCollection<ClockingType>(clockingTypes);
-            //ClockingTypes = [
-            //    new(){
-            //        Id = Guid.CreateVersion7(),
-            //        Name = "Morning Announcement",
-            //        Description = "Record your clock in time."
-
-            //    },
-            //    new(){
-            //        Id = Guid.CreateVersion7(),
-            //        Name = "Lunch Break",
-            //        Description = "Record your lunch break time."
-            //    },
-            //    new(){
-            //        Id = Guid.CreateVersion7(),
-            //        Name = "Afternoon Announcement",
-            //        Description = "Record your clock out time."
-            //    }
-            //];
             //TODO: Uncomment after API is ready
             await foreach (var item in _apiService.GetClockingTypesAsync())
             {

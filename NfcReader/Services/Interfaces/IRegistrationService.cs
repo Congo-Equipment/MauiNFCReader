@@ -46,5 +46,8 @@ namespace NfcReader.Services.Interfaces
         /// </summary>
         /// <returns>Number of clockings for the current day.</returns>
         ValueTask<int> GetTodayClockingCount();
+        ValueTask<Response<Employee>> GetOrFetchEmployeeInfoAsync(string badgeId, CancellationToken cancellationToken = default);
+        Task<Response<string>> SaveClockingAsync(Clocking clocking, CancellationToken cancellationToken = default);
+        ValueTask<int> GetTodayClockingCount(Guid clockingType);
     }
 }
