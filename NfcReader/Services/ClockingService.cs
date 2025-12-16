@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CommunityToolkit.Maui.ApplicationModel;
+using Microsoft.EntityFrameworkCore;
 using NfcReader.Contexts;
 using NfcReader.Models;
 using NfcReader.Models.Enums;
@@ -67,6 +68,80 @@ namespace NfcReader.Services
             }
         }
 
+        public async Task<Response<string>> SaveClockingAsync(Clocking clocking, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var employee = await apiService.GetEmployeeInfo(clocking.BadgeId);
+                if (!employee.IsSuccessful)
+                {
+                    return new Response<string>
+                    {
+                        Success = false,
+                        Message = "Employee not found."
+                    };
+                }
+
+
+                var hasPunchedIn = await context
+                    .Clockings
+                    .AnyAsync(c => c.StaffId == clocking.StaffId &&
+                    c.ClockingKind == ClockingKind.Meeting &&
+                    c.ClockingTime.Date == DateTime.UtcNow.Date &&
+                    c.ClockingTypeId == clocking.ClockingTypeId);
+                if (hasPunchedIn)
+                {
+                    return new Response<string>
+                    {
+                        Success = false,
+                        Message = "You have already clocked in for a meeting today.",
+                    };
+                }
+
+                var en = await context.Clockings.AddAsync(clocking, cancellationToken);
+
+                var raw = new RawClocking
+                {
+                    BadgeId = clocking.BadgeId,
+                    ClockingTime = clocking.ClockingTime,
+                    StaffId = clocking.StaffId,
+                    ClockingTypeId = clocking.ClockingTypeId
+                };
+
+                var api = await apiService.SaveRawClocking(raw);
+                if (!api.IsSuccessStatusCode)
+                {
+
+
+                    return new Response<string>
+                    {
+                        Success = false,
+                        Message = "Failed to sync with the serveur"
+                    };
+                }
+
+                var result = api.Content;
+
+                en.Entity.Created = result?.Data?.Created ?? DateTime.Now;
+
+                //var resut = await collection.UpdateAsync(clocking);s
+                return new Response<string>
+                {
+                    Success = true,
+                    Message = result?.Message
+                };
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return new Response<string>
+                {
+                    Success = false,
+                    Message = "An Error occured while processing the entry",
+                };
+            }
+        }
+
         public async Task<int> TodayClockingAsync(CancellationToken cancellationToken = default)
         {
             return await context.Clockings.CountAsync(c => c.ClockingKind == ClockingKind.Meeting && c.ClockingTime.Date == DateTime.UtcNow.Date);
@@ -84,7 +159,7 @@ namespace NfcReader.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex,"MEETING-CLOCKING:"); 
+                Debug.WriteLine(ex, "MEETING-CLOCKING:");
                 return false;
             }
         }

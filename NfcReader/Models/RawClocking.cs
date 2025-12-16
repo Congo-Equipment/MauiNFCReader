@@ -7,5 +7,6 @@
         public string? StaffId { get; set; }
         public DateTime ClockingTime { get; set; }
         public DateTime Created { get; set; }
+        public Guid ClockingTypeId { get; set; }
     }
 }

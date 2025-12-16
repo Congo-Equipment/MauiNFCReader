@@ -10,4 +10,5 @@ public class Clocking
     public DateTime ClockingTime { get; set; }
     public DateTime Created { get; set; }
     public ClockingKind ClockingKind { get; set; }
+    public Guid ClockingTypeId { get; set; }
 }

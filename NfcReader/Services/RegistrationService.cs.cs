@@ -1,9 +1,11 @@
-﻿using LiteDB.Async;
+﻿using Android.Content;
+using LiteDB.Async;
 using NfcReader.Models;
 using NfcReader.Services.Interfaces;
 using NfcReader.Shared;
 using NfcReader.Utils;
 using System.Diagnostics;
+using SyncResult = NfcReader.Shared.SyncResult;
 
 namespace NfcReader.Services
 {
@@ -106,7 +108,7 @@ namespace NfcReader.Services
             }
         }
 
-        public async ValueTask<Response<IEnumerable<SyncResult>>> SaveAndSync()
+        public async ValueTask<Response<IEnumerable<Shared.SyncResult>>> SaveAndSync()
         {
             try
             {
@@ -238,6 +240,83 @@ namespace NfcReader.Services
                 {
                     Success = false,
                     Message = "Error saving and syncing clocking "
+                };
+            }
+        }
+
+        public async Task<Response<string>> SaveClockingAsync(Clocking clocking, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                using var db = new LiteDatabaseAsync($"Filename={Constants.DB_PATH};Connection=shared");
+                var collection = db.GetCollection<RawClocking>(nameof(RawClocking));
+
+                var employee = await apiService.GetEmployeeInfo(clocking.BadgeId);
+                if (!employee.IsSuccessful)
+                {
+                    return new Response<string>
+                    {
+                        Success = false,
+                        Message = "Employee not found."
+                    };
+                }
+
+
+                var hasPunchedIn = await collection
+                    .Query()
+                    .Where(c => c.StaffId == clocking.StaffId &&
+                        c.ClockingTime.Date == DateTime.UtcNow.Date &&
+                        c.ClockingTypeId == clocking.ClockingTypeId)
+                    .CountAsync();
+                if (hasPunchedIn > 0)
+                {
+                    return new Response<string>
+                    {
+                        Success = false,
+                        Message = "You have already clocked in for a meeting today.",
+                    };
+                }
+
+
+                var raw = new RawClocking
+                {
+                    BadgeId = clocking.BadgeId,
+                    ClockingTime = clocking.ClockingTime,
+                    StaffId = clocking.StaffId,
+                    ClockingTypeId = clocking.ClockingTypeId,
+                    Created = DateTime.UtcNow
+                };
+
+                var api = await apiService.SaveRawClocking(raw);
+                if (!api.IsSuccessStatusCode)
+                {
+
+
+                    return new Response<string>
+                    {
+                        Success = false,
+                        Message = "Failed to sync with the serveur"
+                    };
+                }
+
+                var result = api.Content;
+
+                await collection.InsertAsync(raw);
+
+
+                return new Response<string>
+                {
+                    Success = true,
+                    Message = result?.Message
+                };
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return new Response<string>
+                {
+                    Success = false,
+                    Message = "An Error occured while processing the entry",
                 };
             }
         }
