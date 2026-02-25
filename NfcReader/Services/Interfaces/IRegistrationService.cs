@@ -49,5 +49,6 @@ namespace NfcReader.Services.Interfaces
         ValueTask<Response<Employee>> GetOrFetchEmployeeInfoAsync(string badgeId, CancellationToken cancellationToken = default);
         Task<Response<string>> SaveClockingAsync(Clocking clocking, CancellationToken cancellationToken = default);
         ValueTask<int> GetTodayClockingCount(Guid clockingType);
+        ValueTask<Response<Recording>> CanClockInAsync(string badggeId);
     }
 }

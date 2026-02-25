@@ -15,6 +15,9 @@ public interface IApiService
     [Post("/clocking/sync-badges")]
     Task<ApiResponse<Response<IEnumerable<SyncResult>>>> SyncBadges([Body] List<Recording> badges);
 
+    [Get("/clocking/can-clock/{badgeId}")]
+    Task<ApiResponse<Response<Recording>>> CanClockAsync(string badgeId);
+
     [Get("/clocking/employee-info/{badgeId}")]
     Task<ApiResponse<Employee>> GetEmployeeInfo(string badgeId);
 }

@@ -1,8 +1,10 @@
 ﻿using Android.Media;
 using AsyncAwaitBestPractices;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using NfcReader.Models;
 using NfcReader.Services.Interfaces;
+using NfcReader.Utils;
 using Plugin.NFC;
 using System.Diagnostics;
 
@@ -138,13 +140,26 @@ namespace NfcReader.ViewModels
                 //IsBusy = true;
                 if (string.IsNullOrWhiteSpace(badgeId))
                 {
-                    await AppShell.Current.DisplayAlert("NFC", "Empty tag", "OK");
+                    await AppShell.Current.DisplayAlertAsync("NFC", "Empty tag", "OK");
+                }
+
+                var canClock = await _registrationService.CanClockInAsync(badgeId);
+                if (!canClock.Success)
+                {
+                    CurrentBadgeOwner = canClock.Message;
+                    IsSuccessful = true;
+                    RingSound?.Play();
+                    await Task.Delay(TimeSpan.FromSeconds(2));// Stop the sound after 1 second
+                    RingSound?.Stop();
+                    CurrentBadgeOwner = "Waiting for tag...";
+                    await AppShell.Current.DisplaySnackbar(canClock.Message ?? "Not allowed to clock in, please contact the IT Team", duration: TimeSpan.FromSeconds(3), visualOptions: Constants.SnackbarFailedStyle);
+                    return;
                 }
 
                 var employeeInfo = await _registrationService.GetOrFetchEmployeeInfoAsync(badgeId);
                 if (!employeeInfo.Success)
                 {
-                    await AppShell.Current.DisplayAlert("NFC", employeeInfo.Message, "OK");
+                    await AppShell.Current.DisplayAlertAsync("NFC", employeeInfo.Message, "OK");
                     return;
                 }
 

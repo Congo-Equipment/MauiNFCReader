@@ -18,8 +18,8 @@ namespace NfcReader.Utils
         public static SnackbarOptions SnackbarFailedStyle = new SnackbarOptions
         {
             Font = Microsoft.Maui.Font.Default,
-            BackgroundColor = Color.FromRgba(220,53,69,1),
-            TextColor = Colors.White
+            BackgroundColor = Color.FromRgba(225, 117, 44, 1),
+            TextColor = Colors.DarkRed
         };
         
         public static SnackbarOptions SnackbarDefaultStyle = new SnackbarOptions
@@ -29,8 +29,8 @@ namespace NfcReader.Utils
             TextColor = Colors.Black
         };
 #if DEBUG
-        //public static string BASE_API = "https://10.15.213.165:45455/api";//dev
-        public static string BASE_API = "http://srvce10035:1011/api";//prod
+        public static string BASE_API = "https://10.15.213.165:45455/api";//dev
+        //public static string BASE_API = "http://srvce10035:1011/api";//prod
 #elif RELEASE
         public static string BASE_API = "http://10.0.15.177:1010/api";//prod
 #else

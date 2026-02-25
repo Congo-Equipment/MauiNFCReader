@@ -394,6 +394,39 @@ namespace NfcReader.Services
 
         }
 
+        public async ValueTask<Response<Recording>> CanClockInAsync(string badggeId)
+        {
+            try
+            {
+                var res = await apiService.CanClockAsync(badggeId);
+
+                if (res.IsSuccessStatusCode)
+                {
+                    return new Response<Recording>
+                    {
+                        Success = res.Content.Success,
+                        Message = res.Content?.Message,
+                        Data = res.Content?.Data
+                    };
+                }
+
+                return new Response<Recording>
+                {
+                    Success = false,
+                    Message = "Failed to check clock-in status with the server"
+                };
+            }
+            catch (Exception ex)
+            {
+
+                return new Response<Recording>
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
+            }
+        }
+
         public async ValueTask<int> GetTodayClockingCount()
         {
             try
