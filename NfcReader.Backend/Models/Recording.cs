@@ -9,6 +9,7 @@ namespace NfcReader.Backend.Models
         public required string BadgeId { get; set; }
         public required DateTime Created { get; set; }
         public required string StaffId { get; set; }
+        public bool IsEnabled { get; set; }
     }
 
     public class RecordingEntityTypeConfiguration : IEntityTypeConfiguration<Recording>
@@ -19,6 +20,8 @@ namespace NfcReader.Backend.Models
 
             builder.HasKey(x => x.Id);
 
+            builder.HasQueryFilter(x => x.IsEnabled);
+
             builder.Property(x => x.Id).HasColumnName("OID").ValueGeneratedOnAdd();
 
             builder.Property(x => x.BadgeId).HasColumnName("BADGE_ID").IsRequired();
@@ -26,6 +29,12 @@ namespace NfcReader.Backend.Models
             builder.Property(x => x.Created).HasColumnName("CREATED").IsRequired();
 
             builder.Property(x => x.StaffId).HasColumnName("STAFF_ID").IsRequired();
+
+            builder.Property(x => x.IsEnabled)
+                .HasColumnName("IS_ENABLED")
+                .HasDefaultValueSql("1")
+                .HasSentinel(false)
+                .IsRequired();
         }
     }
 }

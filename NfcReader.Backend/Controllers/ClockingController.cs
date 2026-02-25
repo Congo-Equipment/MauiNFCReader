@@ -28,6 +28,15 @@ namespace NfcReader.Backend.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("can-clock/{badgeId}")]
+        public async Task<IActionResult> CanClockAsync(string badgeId)
+        {
+            var result = await clockingService.CanClockInAsync(badgeId);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+
         [HttpPost("sync-badges")]
         public async Task<IActionResult> SyncBadgesAsync([FromBody] IEnumerable<Recording> records)
         {

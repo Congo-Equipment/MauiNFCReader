@@ -102,6 +102,16 @@ namespace NfcReader.Backend.Services
                 //if (result > 0)
                 //{
 
+                var doesExist = await dbContext.Employees.AnyAsync(x => x.StaffId == recording.StaffId);
+                if (!doesExist)
+                {
+                    return new Response<string>
+                    {
+                        Success = false,
+                        Message = $"Failed to update badge id for {recording.StaffId}, employee not found!"
+                    };
+                }
+
                 // Save the recording to the database
                 await dbContext.Recordings.AddAsync(recording);
                 await dbContext.SaveChangesAsync();
@@ -139,21 +149,36 @@ namespace NfcReader.Backend.Services
                     //var result = await dbContext.Employees.Where(x => x.StaffId == record.StaffId)
                     //.ExecuteUpdateAsync(x => x.SetProperty(b => b.badgeId, record.BadgeId));
 
+                    ///Save only if the employee exist, otherwise skip and add to the result as not synced
 
-                    //var exist = await dbContext.Recordings.AnyAsync(x => x.Id == record.Id);
-                    if (!await dbContext.Recordings.AnyAsync(x => x.Id == record.Id))
+                    var doesExist = await dbContext.Employees.AnyAsync(x => x.StaffId == record.StaffId);
+                    if (doesExist)
                     {
-                        var r = await dbContext.Recordings.AddAsync(record);
-                        await dbContext.SaveChangesAsync();
 
+                        //var exist = await dbContext.Recordings.AnyAsync(x => x.Id == record.Id);
+                        if (!await dbContext.Recordings.AnyAsync(x => x.Id == record.Id))
+                        {
+                            var r = await dbContext.Recordings.AddAsync(record);
+                            await dbContext.SaveChangesAsync();
+
+                        }
+
+                        syncResults.Add(new()
+                        {
+                            StaffId = record.StaffId,
+                            BadgeId = record.BadgeId,
+                            Synced = true
+                        });
                     }
-
-                    syncResults.Add(new()
+                    else
                     {
-                        StaffId = record.StaffId,
-                        BadgeId = record.BadgeId,
-                        Synced = true
-                    });
+                        syncResults.Add(new()
+                        {
+                            StaffId = record.StaffId,
+                            BadgeId = record.BadgeId,
+                            Synced = false
+                        });
+                    }
                 }
 
                 //await dbContext.Recordings.AddRangeAsync(records);
@@ -162,7 +187,7 @@ namespace NfcReader.Backend.Services
                 return new Response<IEnumerable<SyncResult>>
                 {
                     Success = true,
-                    Message = $"{syncResults.Count} records synced successfully!",
+                    Message = $"{syncResults.Count(x => x.Synced)} records synced successfully!",
                     Data = syncResults
                 };
             }
@@ -225,6 +250,44 @@ namespace NfcReader.Backend.Services
             await foreach (var record in dbContext.Recordings.OrderByDescending(x => x.Created).AsAsyncEnumerable())
             {
                 yield return record;
+            }
+        }
+
+        public async ValueTask<Response<Recording>> CanClockInAsync(string badgeId)
+        {
+            try
+            {
+                var recording = await dbContext.Recordings.FirstOrDefaultAsync(x => x.BadgeId == badgeId);
+                if (recording is null)
+                {
+                    return new Response<Recording>()
+                    {
+                        Success = false,
+                        Message = "Badge information not found or registred"
+                    };
+                }
+                var emp = await dbContext.Employees.FirstOrDefaultAsync(x => x.StaffId == recording.StaffId);
+                if (emp is null)
+                {
+                    return new Response<Recording>()
+                    {
+                        Success = false,
+                        Message = "Employee not found or registred with this badge id"
+                    };
+                }
+                return new Response<Recording>()
+                {
+                    Success = true,
+                    Data = recording
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response<Recording>()
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
             }
         }
 

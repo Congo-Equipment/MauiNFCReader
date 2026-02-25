@@ -11,6 +11,7 @@ public class Employee
     public string? StaffId { get; set; }
     public string? Department { get; set; }
     public string? Position { get; set; }
+    public DateTime? Payroll { get; set; }
 
     public override string ToString()
     {
@@ -25,6 +26,9 @@ public class EmployeeEntityTypeConfiguration : IEntityTypeConfiguration<Employee
     {
         builder.ToTable("T_EMPLOYE");
 
+        // Filter out employees without payroll information
+        builder.HasQueryFilter(x => x.Payroll != null);
+
         builder.Property(x => x.Id).HasColumnName("OID");
 
         builder.Property(x => x.Names).HasColumnName("NOMS").HasMaxLength(50);
@@ -32,5 +36,6 @@ public class EmployeeEntityTypeConfiguration : IEntityTypeConfiguration<Employee
         builder.Property(x => x.StaffId).HasColumnName("MATRICULE").HasMaxLength(50);
         builder.Property(x => x.Department).HasColumnName("OIDDEPARTEMENT").HasMaxLength(50);
         builder.Property(x => x.Position).HasColumnName("OIDFONCTION").HasMaxLength(50);
+        builder.Property(x => x.Payroll).HasColumnName("PAYROLL");
     }
 }
