@@ -257,7 +257,7 @@ namespace NfcReader.Backend.Services
         {
             try
             {
-                var recording = await dbContext.Recordings.FirstOrDefaultAsync(x => x.BadgeId == badgeId);
+                var recording = await dbContext.Recordings.FirstOrDefaultAsync(x => x.BadgeId == badgeId && x.IsEnabled);
                 if (recording is null)
                 {
                     return new Response<Recording>()
